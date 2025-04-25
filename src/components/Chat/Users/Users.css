@@ -1,0 +1,29 @@
+.chat-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.chat-item{
+  border: none;
+}
+.chat-item:hover{
+    background-color: rgb(145, 189, 229);
+    border: none;
+}
+.Inbox {
+  background-color: rgb(66, 66, 237);
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+}
+.user-photo {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+.chat-list {
+  overflow-y: auto;        
+  height: 70vh;           
+}

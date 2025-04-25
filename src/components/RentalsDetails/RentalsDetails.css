@@ -1,0 +1,78 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: 0;
+}
+#product-description{
+    padding-bottom: 2rem;
+}
+.Path , .welcome{
+    margin: 3rem 0;
+    color: gray;
+}
+#product-description .Album .photo {
+    background-color: #f5f5f5;
+    margin-top: 1rem;
+    width: 100%;
+}
+#product-description .Album img{
+    width: 100%;
+    padding: 1.5rem;
+}
+#product-description .center-photo img {
+    width: 100%;
+    padding: 1.5rem;
+}
+#product-description .center-photo{
+    background-color: #f5f5f5;
+    padding: 9.5rem 0;
+    margin-top: 1rem;
+}
+.Buy-Now{
+    font-size: 1.2rem;
+    padding: .4rem 2rem;
+}
+#RentalsDetails .count span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2rem;
+    border: 1px solid rgb(150, 148, 148);
+    color: black;
+    font-weight: 600;
+}
+#RentalsDetails i:hover{
+    background-color: #4490db;
+    color: white
+}
+#RentalsDetails .heart .active{
+    background-color: #4456db;
+    color: white
+}
+#product-description .des-bottom{
+    margin-top: 2.5rem;
+    border: 2px solid rgb(189, 188, 188);
+    border-radius: 5px;
+}
+#product-description .des-bottom .first{
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 2px solid rgb(189, 188, 188);
+}
+#product-description .des-bottom .icon {
+    display: flex;
+    align-items: center;
+    margin: -1rem 1rem 0 0;
+}
+#product-description .des-bottom .first p{
+    border-bottom: 2px solid rgb(189, 188, 188);
+}
+#product-description .des-bottom i{
+    color: black;
+    font-size: 1.5rem;
+}
+#product-description .des-bottom .sec{
+    padding: 1.5rem 1rem 1rem;
+}
+#product-description .des-bottom .sec p a{
+    color: black;
+}

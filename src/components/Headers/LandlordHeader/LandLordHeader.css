@@ -1,0 +1,54 @@
+.profile-photo , .chat{
+    background-color: rgb(76, 76, 245);
+    display: flex;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    position: relative;
+    transition: .3s;
+    cursor: pointer;
+}
+.profile-photo .def-user , .chat {
+    color: white;
+    font-size: .9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-photo:hover , .chat:hover{
+    background-color: white;
+    color:rgb(76, 76, 245) ;
+}
+.chat {
+    margin-left: 11rem;
+}
+.dropdown{
+    position: absolute;
+    right: 1rem;
+}
+.dropdown-toggle {
+    opacity: 0;
+}
+.dropdown-menu.show {
+    margin: .5rem 0 0 -12rem;
+    background: linear-gradient(135deg, rgba(149, 149, 149, 0.7), rgba(0, 0, 0, 0.733)); /* لون خلفية متدرج */
+    backdrop-filter: blur(10px)
+    
+}
+.dropdown-item{
+    color: white !important;
+}
+.dropdown-item h6{
+    font-weight: 400;
+}
+.dropdown-item i{
+    color: white !important;
+}
+.dropdown-item:hover{
+    background-color: white;
+    color: black !important;
+}
+.dropdown-item:hover > i{
+    color: black !important;
+}
