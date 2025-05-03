@@ -27,6 +27,9 @@
     position: absolute;
     right: 1rem;
 }
+.dropdown a{
+    color: white;
+}
 .dropdown-toggle {
     opacity: 0;
 }
@@ -45,7 +48,7 @@
 .dropdown-item i{
     color: white !important;
 }
-.dropdown-item:hover{
+.dropdown-item:hover , .dropdown-item a:hover{
     background-color: white;
     color: black !important;
 }

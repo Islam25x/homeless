@@ -1,5 +1,4 @@
 import { Container, Row, Col } from "react-bootstrap";
-import React from "react";
 import "./ManageProperty.css";
 
 const ManageProperty = () => {

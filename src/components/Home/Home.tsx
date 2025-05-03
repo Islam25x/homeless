@@ -3,19 +3,22 @@ import ExploreRentals from "./ExploreRentals/ExploreRentals";
 import MostRental from "./MostRental/MostRental";
 import ManageProperty from "./ManageProperty/ManageProperty";
 import MainHeader from "../Headers/MainHeader/MainHeader";
-import LandlordHeader from "../Headers/LandlordHeader/LandlordHeader";
+import LogedHeader from "../Headers/LogedHeader/LogedHeader";
 import Footer from "../Footer/Footer";
+
 function Home() {
+    const userRole: any = localStorage.getItem('userRole') || ''; 
+    console.log(userRole);
+    
     return (
-    <>
-        <MainHeader />
-        {/* <LandlordHeader /> */}
-        <Main />
-        <ExploreRentals />
-        <MostRental />
-        <ManageProperty />
-        <Footer />
-    </>
+        <>
+            {userRole === '' ?  <MainHeader />:<LogedHeader /> } 
+            <Main />
+            <ExploreRentals />
+            <MostRental />
+            <ManageProperty />
+            <Footer />
+        </>
     );
 }
 

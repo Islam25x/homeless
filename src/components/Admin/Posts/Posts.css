@@ -1,0 +1,35 @@
+#Posts .swiper {
+  width: 100%;
+  overflow: hidden;
+  padding: 1rem 0;
+
+}
+#Posts a{
+    color: black;
+}
+#Posts .swiper-pagination{
+    bottom: -5px;
+}
+#Posts .swiper-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%; 
+  box-sizing: border-box;
+  transition: 0.3s;
+}
+
+#Posts .post-card {
+  width: 100%;
+  max-width: 300px;
+  background: #fff;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+#Posts .post-image {
+  width: 100%;
+  height: 15rem;
+  object-fit: cover;
+}

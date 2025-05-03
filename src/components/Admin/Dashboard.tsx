@@ -1,31 +1,34 @@
-import { Col, Container, Row } from "react-bootstrap"
-import AdminNav from "../Headers/AdminNav/AdminNav"
-import DashboardTop from "./DashboardTop/DashboardTop"
-
-
+import { useState } from "react";
+import AdminNav from "../Headers/AdminNav/AdminNav";
+import DashboardTop from "./DashboardTop/DashboardTop";
+import LandlordPending from "./LandlordPending/LandlordPending";
+import Posts from "./Posts/Posts";
 
 function Dashboard() {
+  const [activeComponent, setActiveComponent] = useState<string>("welcome");
+
+  const renderActiveComponent = () => {
+    switch (activeComponent) {
+      case "users":
+        return <LandlordPending />;
+      case "posts":
+        return <Posts />;
+      default:
+        return <p className="text-center my-5">Welcome to the Dashboard!</p>;
+    }
+  };
+
   return (
     <section id='Admin'>
       <div className="Dashboard d-flex">
-        <AdminNav />
-        <div className="Dashboard-ctn" style={{width:'100%', paddingBottom:'2rem'}}>
+        <AdminNav  activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
+        <div className="Dashboard-ctn" style={{ width: '100%'}}>
           <DashboardTop />
-          sdadd
+          {renderActiveComponent()}
         </div>
       </div>
-      {/* <Container>
-        <Row>
-          <Col lg={3} md={3} sm={3}>
-           
-          </Col>
-          <Col lg={9} md={9} sm={9}>
-            
-          </Col>
-        </Row>
-      </Container> */}
     </section>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

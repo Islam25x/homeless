@@ -1,37 +1,46 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
-import { useSignupMutation } from "../../RTK/Auth/AuthApi";
+import { useRegisterMutation } from "../../RTK/Auth/AuthApi";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../LoginSystem.css";
 
-// Define the types for the form data and errors
 interface FormData {
   username: string;
   email: string;
   password: string;
-  from_Service: string;
+  Role: string;
   isProfessional: boolean;
   checked: boolean;
 }
-
-interface Errors {
-  username?: string;
-  email?: string;
-  password?: string;
-  from_Service?: string;
+// Define the decoded token structure (adjust as needed)
+interface DecodedToken {
+  role: string;
+  name: string;
+  exp: number;
+  [key: string]: any;
 }
+
+// Function to decode the token using atob
+const decodeToken = (token: string): DecodedToken => {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const decoded = JSON.parse(atob(base64));
+  return decoded;
+};
 
 const SignUp = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
     email: "",
     password: "",
-    from_Service: "",
+    Role: "",
     isProfessional: false,
     checked: false,
   });
 
-  const [errors, setErrors] = useState<Errors>({});
-  const [signup, { isLoading, error }] = useSignupMutation();
+  const [register, { isLoading, error }] = useRegisterMutation();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -46,51 +55,65 @@ const SignUp = () => {
     });
   };
 
-  const validate = () => {
-    const newErrors: Errors = {};
-    if (!formData.username.trim()) newErrors.username = "Username is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    if (!formData.password.trim()) newErrors.password = "Password is required";
-    if (formData.password.trim().length < 6)
-      newErrors.password = "Password must be longer than 6 characters";
-    if (!formData.from_Service)
-      newErrors.from_Service = "Role is required";
-    return newErrors;
-  };
-
+  const navigate = useNavigate()
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      setErrors({});
-
-      const userData = {
-        name: formData.username,
-        email: formData.email,
-        password: formData.password,
-        role: formData.from_Service,
-        isProfessional: formData.isProfessional,
-      };
-
-      try {
-        const res = await signup(userData).unwrap();
-        console.log("✅ Signed up:", res);
-
-        localStorage.setItem("token", res.token);
-        // Navigate or show success if needed
-      } catch (err) {
-        console.error("❌ Signup failed", err);
+  
+    const userData = {
+      name: formData.username,
+      email: formData.email,
+      password: formData.password,
+      role: formData.Role,
+      isProfessional: formData.isProfessional,
+    };
+  
+    try {
+      const response = await register({ userDto: userData, role: formData.Role }).unwrap();
+  
+      // تحقق مما إذا كانت الاستجابة تحتوي على token (أي Tenant)
+      if ("token" in response) {
+        const token = response.token;
+        const refreshToken = response.refreshToken;
+  
+        const decoded = decodeToken(token);
+        const role =
+          decoded[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ];
+  
+        localStorage.setItem("token", token);
+        if (refreshToken) {
+          localStorage.setItem("refreshToken", refreshToken);
+        }
+        localStorage.setItem("user", JSON.stringify(decoded));
+        localStorage.setItem("userRole", role);
+        localStorage.setItem("userId", decoded.sub);
+  
+        toast.success("Signed up successfully");
+        navigate("/");
+      } else {
+        // الدور ليس Tenant
+        toast.success("Registered successfully. Please wait for approval.");
+        navigate("/");
       }
+    } catch (err) {
+      console.error("Signup error:", err);
+      toast.error("Registration failed. Please try again.");
     }
   };
+  
+
+
+  // Safe error casting
+  const fieldErrors = (error && "data" in error && (error as any).data?.errors) || {};
+  const globalMessage = (error && "data" in error && (error as any).data?.message) || "";
 
   return (
     <section id="SignUp">
       <Container>
         <div className="sign-header text-center">
-          <h2>Create an account</h2>
+          <h2>Create an Account</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -104,9 +127,7 @@ const SignUp = () => {
                 value={formData.username}
                 onChange={handleChange}
               />
-              {errors.username && (
-                <p className="text-danger">{errors.username}</p>
-              )}
+              {fieldErrors.username && <p className="text-danger">{fieldErrors.username}</p>}
             </div>
 
             <div className="my-3">
@@ -118,7 +139,7 @@ const SignUp = () => {
                 value={formData.email}
                 onChange={handleChange}
               />
-              {errors.email && <p className="text-danger">{errors.email}</p>}
+              {fieldErrors.email && <p className="text-danger">{fieldErrors.email}</p>}
             </div>
 
             <div>
@@ -130,35 +151,31 @@ const SignUp = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
-              {errors.password && (
-                <p className="text-danger">{errors.password}</p>
-              )}
+              {fieldErrors.password && <p className="text-danger">{fieldErrors.password}</p>}
             </div>
 
             <div className="select">
-              <label htmlFor="from_Service" className="d-block">
+              <label htmlFor="Role" className="d-block mt-2">
                 Select Role
               </label>
               <select
-                id="from_Service"
-                name="from_Service"
-                value={formData.from_Service}
+                id="Role"
+                name="Role"
+                value={formData.Role}
                 onChange={handleChange}
               >
                 <option value="">—Select Role—</option>
                 <option value="Landlord">Landlord</option>
                 <option value="Tenant">Tenant</option>
               </select>
-              {errors.from_Service && (
-                <p className="text-danger">{errors.from_Service}</p>
-              )}
+              {fieldErrors.role && <p className="text-danger">{fieldErrors.role}</p>}
             </div>
           </div>
 
           <div className="form-bottom">
             <p>
               Message and data rates may apply. By submitting your phone number,
-              you consent to being contacted{" "}
+              you consent to being contacted by
               <span style={{ color: "#0f8ac0" }}>TheHomeless.org</span>
             </p>
 
@@ -179,11 +196,7 @@ const SignUp = () => {
               {isLoading ? "Signing Up..." : "Sign Up"}
             </button>
 
-            {error && (
-              <p className="text-danger mt-2">
-                Failed to sign up. Please try again.
-              </p>
-            )}
+            {globalMessage && <p className="text-danger mt-2">{globalMessage}</p>}
           </div>
         </form>
       </Container>

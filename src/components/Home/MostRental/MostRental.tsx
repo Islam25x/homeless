@@ -1,8 +1,8 @@
-import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import "./MostRental.css";
 
 const MostRental = () => {
+
   return (
     <section id="MostRental">
       <Container>
@@ -37,9 +37,7 @@ const MostRental = () => {
                   <p className="card-text">
                     Browse the highest quality listings, apply online, sign your lease, and even pay your rent from any device.
                   </p>
-                  <p className="card-text">
                     <a href="1">Find Out More</a>
-                  </p>
                 </div>
               </Col>
             </Row>

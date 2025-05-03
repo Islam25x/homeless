@@ -1,26 +1,21 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { useGetUsersQuery } from "../../RTK/Auth/AuthApi";
+import { useNavigate } from "react-router-dom";
 
 import "./HomeTop.css";
 
 const HomeTop = () => {
-  // State to store search input
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const navigate = useNavigate();
 
-  const {data} = useGetUsersQuery()
-  console.log(data);
-  
-
-  // Handle input change
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  // Handle search form submit
   const handleSearchSubmit = (e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    console.log("Search term:", searchTerm);
-    // You can trigger search API call here
+    if (searchTerm.trim()) {
+      navigate(`/SearchResult/${encodeURIComponent(searchTerm.trim())}`);
+    }
   };
 
   return (

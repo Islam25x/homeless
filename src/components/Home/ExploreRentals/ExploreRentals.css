@@ -1,7 +1,7 @@
 #ExploreRentals {
   padding-bottom: 1.5rem;
 }
-#ExploreRentals .card {
+#ExploreRentals .card , #SearchResult .card , #Saved .card{
   align-items: center;
   cursor: pointer;
   background-color: #ffffff;
@@ -9,14 +9,14 @@
   margin-bottom: 20px;
   transition: 0.3s;
 }
-#ExploreRentals .card:hover {
+#ExploreRentals .card:hover , #Posts .swiper-slide:hover ,#SearchResult .card:hover , #Saved .card:hover{
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-#ExploreRentals .card .card-img-top{
+#ExploreRentals .card .card-img-top ,#SearchResult .card .card-img-top , #Saved .card .card-img-top{
     width: 100%;
-    height: 20rem;
+    height: 15rem;
 }
-#ExploreRentals .card .card-text{
+#ExploreRentals .card .card-text , #SearchResult .card .card-text{
   font-weight: 100;
 }
 .view-more-btn{

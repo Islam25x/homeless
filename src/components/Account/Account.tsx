@@ -4,9 +4,14 @@ import { Link } from "react-router";
 import "./Account.css";
 
 // Components
-import LandlordHeader from "../Headers/LandlordHeader/LandlordHeader";
+import LandlordHeader from "../Headers/LogedHeader/LogedHeader";
 
 const Account: React.FC = () => {
+
+  const username: any = JSON.parse(localStorage.getItem('user') || '{}');
+  const userRole = localStorage.getItem('userRole') || '';
+  const firstName: string = username.name ? username.name.split(" ")[0] : "null";
+  const lastName: string = username.name ? username.name.split(" ")[1] : "null";
   // State for uploaded image (future use)
   const [image, setImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,7 +37,6 @@ const Account: React.FC = () => {
     <section id="Account">
       {/* Header */}
       <LandlordHeader />
-
       <Container>
         {/* Top Navigation and Welcome Text */}
         <header className="d-flex justify-content-between mt-5">
@@ -40,7 +44,7 @@ const Account: React.FC = () => {
             Home /<span className="text-dark"> My Account</span>
           </p>
           <p className="welcome text-dark">
-            Welcome!<span className="text-primary"> dssd</span>
+            Welcome!<span className="text-primary"> {username.name}</span>
           </p>
         </header>
 
@@ -51,21 +55,11 @@ const Account: React.FC = () => {
               <h6>Manage My Account</h6>
               <ul>
                 <li className="text-primary">My Profile</li>
-                <li>Manage properties</li>
+                {userRole === 'landlord' ? <li>Manage properties</li> : <li>Add Properties</li>}
                 <Link to="/Cart/CheckOut">
-                  <li>Manage Rental</li>
+                  {userRole === 'landlord' ? <li>Manage Rental</li> : <li>My collection</li>}
                 </Link>
               </ul>
-
-              <h6>My Orders</h6>
-              <ul>
-                <li>My Returns</li>
-                <Link to="/Favorite">
-                  <li>My Cancellations</li>
-                </Link>
-              </ul>
-
-              <h6>My WishList 5</h6>
             </div>
           </Col>
 
@@ -129,22 +123,22 @@ const Account: React.FC = () => {
                 <div className="name d-flex justify-content-between mt-4">
                   <div className="in-container">
                     <h6>First Name</h6>
-                    <input type="text" placeholder="First Name" />
+                    <input value={firstName} type="text" disabled />
                   </div>
                   <div className="in-container ms-5">
                     <h6>Last Name</h6>
-                    <input type="text" placeholder="Last Name" />
+                    <input value={lastName} type="text" disabled />
                   </div>
                 </div>
 
                 <div className="name d-flex justify-content-between mt-3">
                   <div className="in-container">
                     <h6>Email</h6>
-                    <input type="email" placeholder="Email" />
+                    <input type="email" value={username.email} disabled />
                   </div>
                   <div className="in-container ms-5">
                     <h6>Address</h6>
-                    <input type="text" placeholder="Kingston, 5236, United States" />
+                    <input type="text" placeholder="" disabled />
                   </div>
                 </div>
 

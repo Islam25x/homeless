@@ -25,17 +25,19 @@
     font-size: 1.2rem;
 }
 
-.sidebar .nav-link {
+.sidebar p{
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
   transition: 0.2s;
   color: black;
+  cursor: pointer;
 }
 
-.sidebar .nav-link.active,
-.sidebar .nav-link:hover {
+.sidebar p.active,
+.sidebar p:hover,
+.sidebar .bottom:hover {
   background-color: #3a8ad6;
   color: #ffffff;
 }

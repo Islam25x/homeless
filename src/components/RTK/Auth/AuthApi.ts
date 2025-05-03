@@ -1,29 +1,69 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQueryWithReauth';
+
+interface NewUserDto {
+    name: string;
+    email: string;
+    password: string;
+}
+
+interface AuthModel {
+    id: string;
+    token: string;
+    refreshToken: string;
+}
+
+interface AuthModelDto {
+    email: string;
+    password: string;
+    token: string;
+    refreshToken?: string;
+    id?: string;
+    role?: string;
+}
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'https://dummyjson.com/users',
-    }),
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
-        getUsers: builder.query<any, void>({
-            query: () => ''
+        getLandlordPending: builder.query<any, void>({
+            query: () => 'LandlordsRequests',
         }),
-        login: builder.mutation<{ token: string }, { email: string; password: string }>({
-            query: (credentials) => ({
-                url: '/login',
+        login: builder.mutation<AuthModelDto, { name: string; password: string }>({
+            query: ({ name, password }) => ({
+                url: 'Login',
                 method: 'POST',
-                body: credentials,
+                params: { name, password },
             }),
         }),
-        signup: builder.mutation<{ token: string }, { name: string; email: string; password: string }>({
-            query: (newUser) => ({
-                url: '/signup',
+        register: builder.mutation<AuthModelDto | { message: string }, { userDto: NewUserDto; role: string }>({
+            query: ({ userDto, role }) => ({
+                url: `Register?role=${role}`,
                 method: 'POST',
-                body: newUser,
+                body: userDto,
+                credentials: 'include',
+            }),
+        }),
+        Logout: builder.mutation<any, void>({
+            query: () => ({
+                url: 'logout',
+                method: 'POST',
+            }),
+        }),
+        refresh: builder.mutation<AuthModelDto, { refreshToken: string; userId: string }>({
+            query: ({ refreshToken, userId }) => ({
+                url: 'refresh',
+                method: 'POST',
+                body: { refreshToken, userId },
             }),
         }),
     }),
 });
 
-export const { useLoginMutation, useSignupMutation , useGetUsersQuery } = authApi;
+export const {
+    useLoginMutation,
+    useRegisterMutation,
+    useGetLandlordPendingQuery,
+    useLogoutMutation,
+    useRefreshMutation,
+} = authApi;

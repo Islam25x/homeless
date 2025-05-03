@@ -6,32 +6,42 @@ import {
     faBell,
     faCircle
 } from "@fortawesome/free-solid-svg-icons";
+import { useGetDashBoardQuery } from "../../RTK/Admin/AdminApi";
 import "./DashboardTop.css";
 
-const dashboardItems = [
-    {
-        titleKey: "number Of Users",
-        icon: <FontAwesomeIcon icon={faCircle} className="text-success" />,
-        value: "13",
-    },
-    {
-        titleKey: "number Of Admins",
-        icon: <FontAwesomeIcon icon={faClock} className="text-primary" />,
-        value: "1",
-    },
-    {
-        titleKey: "number Of Tenants",
-        icon: <FontAwesomeIcon icon={faChartColumn} className="text-purple" />,
-        value: "10",
-    },
-    {
-        titleKey: "number Of Landlords",
-        icon: <FontAwesomeIcon icon={faBell} className="text-warning" />,
-        value: "2",
-    }
-];
-
 const DashboardTop = () => {
+    const { data, isLoading, error } = useGetDashBoardQuery();
+
+    const dashboardItems = [
+        {
+            titleKey: "Number Of Users",
+            icon: <FontAwesomeIcon icon={faCircle} className="text-success" />,
+            value: data?.numberOfUsers ?? "0", 
+        },
+        {
+            titleKey: "Number Of Admins",
+            icon: <FontAwesomeIcon icon={faClock} className="text-primary" />,
+            value: data?.numberOfAdmins ?? "0",
+        },
+        {
+            titleKey: "Number Of Tenants",
+            icon: <FontAwesomeIcon icon={faChartColumn} className="text-purple" />,
+            value: data?.numberOfTenants ?? "0",
+        },
+        {
+            titleKey: "Number Of Landlords",
+            icon: <FontAwesomeIcon icon={faBell} className="text-warning" />,
+            value: data?.numberOfLandlords ?? "0",
+        }
+    ];
+
+    if (isLoading) {
+        return <p>Loading dashboard...</p>;
+    }
+
+    if (error) {
+        return <p className="text-danger">Failed to load dashboard data.</p>;
+    }
 
     return (
         <section id="DashboardTop" className="container mt-5">

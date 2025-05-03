@@ -1,0 +1,16 @@
+#Comment{
+    height: 38vh;
+    overflow-y: scroll;
+}
+#Comment input {
+    width: 100%;
+    padding: .5rem .5rem;
+    border: 1px solid #bababa;
+    border-radius: .2rem;
+}
+#Comment img{
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+}

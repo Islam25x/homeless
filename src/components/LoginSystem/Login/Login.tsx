@@ -1,28 +1,48 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Container } from "react-bootstrap";
+import { useLoginMutation } from "../../RTK/Auth/AuthApi";
+import { useNavigate } from "react-router-dom";
 import "../LoginSystem.css";
 
-// Define type for formData state
+// أنواع البيانات
 interface FormData {
-  username: string;
+  name: string;
   password: string;
 }
 
-// Define type for errors state
 interface Errors {
-  username?: string;
+  name?: string;
   password?: string;
+  backendError?: string;
 }
 
+interface DecodedToken {
+  role: string;
+  name: string;
+  exp: number;
+  sub: string;
+  [key: string]: any;
+}
+
+// فك التوكن يدويًا
+const decodeToken = (token: string): DecodedToken => {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+      .join('')
+  );
+  return JSON.parse(jsonPayload);
+};
+
 const Login = () => {
-  const [formData, setFormData] = useState<FormData>({
-    username: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState<FormData>({ name: "", password: "" });
   const [errors, setErrors] = useState<Errors>({});
+  const [login, { isLoading }] = useLoginMutation();
+  const navigate = useNavigate();
 
-  // ✅ handleChange to update values correctly
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -31,32 +51,52 @@ const Login = () => {
     }));
   };
 
-  // ✅ validation logic fix
   const validate = () => {
     const newErrors: Errors = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
-    }
-
+    if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
-    } else if (formData.password.trim().length < 6) {
+    } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
-
     return newErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validate();
 
+    const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      setErrors({});
-      console.log("✅ Submitted Data:", formData);
+      return;
+    }
+
+    setErrors({});
+
+    try {
+      const response = await login(formData).unwrap();
+      const { token, refreshToken } = response;
+
+      if (token) {
+        const decoded = decodeToken(token);
+        const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+        // تخزين البيانات
+        localStorage.setItem("token", token);
+        if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("user", JSON.stringify(decoded));
+        localStorage.setItem("userRole", role);
+        localStorage.setItem("userId", decoded.sub);
+
+        navigate("/");
+      } else {
+        setErrors({ backendError: "Token not received from server." });
+      }
+    } catch (err: any) {
+      console.error("Login Error:", err);
+      setErrors({
+        backendError: err?.data?.message || "Login failed. Please try again.",
+      });
     }
   };
 
@@ -70,17 +110,15 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-top">
             <div>
-              <label htmlFor="username">Username</label>
+              <label htmlFor="name">Name</label>
               <input
                 type="text"
-                id="username"
-                name="username"
-                value={formData.username}
+                id="name"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
               />
-              {errors.username && (
-                <p className="text-danger">{errors.username}</p>
-              )}
+              {errors.name && <p className="text-danger">{errors.name}</p>}
             </div>
 
             <div className="my-3">
@@ -92,20 +130,23 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
-              {errors.password && (
-                <p className="text-danger">{errors.password}</p>
-              )}
+              {errors.password && <p className="text-danger">{errors.password}</p>}
             </div>
           </div>
 
           <div className="form-bottom">
             <p>
-              Message and data rates may apply. By submitting your phone number,
-              you consent to being contacted{" "}
+              By submitting your info, you agree to our policy at{" "}
               <span style={{ color: "#0f8ac0" }}>TheHomeless.org</span>
             </p>
 
-            <button type="submit">Sign In</button>
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? "Signing In..." : "Sign In"}
+            </button>
+
+            {errors.backendError && (
+              <p className="text-danger mt-2">{errors.backendError}</p>
+            )}
           </div>
         </form>
       </Container>
