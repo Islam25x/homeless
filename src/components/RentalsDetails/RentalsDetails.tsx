@@ -144,19 +144,17 @@ function RentalsDetails() {
               </div>
 
               <div className="mt-2 d-flex align-items-center location-view">
-                {propertie.landlordImage && (
-                  <img
-                    src={getImageSrc(propertie.landlordImage)}
-                    alt="Landlord"
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      marginRight: '10px',
-                    }}
-                  />
-                )}
+                <img
+                  src={propertie.landlordImage || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740'}
+                  alt="Landlord"
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    marginRight: '10px',
+                  }}
+                />
                 <span>{propertie.landlordName || 'Unknown Landlord'}</span>
               </div>
 
