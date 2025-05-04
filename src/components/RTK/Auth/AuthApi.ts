@@ -7,12 +7,6 @@ interface NewUserDto {
     password: string;
 }
 
-interface AuthModel {
-    id: string;
-    token: string;
-    refreshToken: string;
-}
-
 interface AuthModelDto {
     email: string;
     password: string;
@@ -41,7 +35,6 @@ export const authApi = createApi({
                 url: `Register?role=${role}`,
                 method: 'POST',
                 body: userDto,
-                credentials: 'include',
             }),
         }),
         Logout: builder.mutation<any, void>({

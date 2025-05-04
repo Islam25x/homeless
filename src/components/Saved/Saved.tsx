@@ -2,6 +2,7 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useGetSavedPostsQuery } from "../RTK/SaveSlice/SaveApi";
 import LogedHeader from "../Headers/LogedHeader/LogedHeader";
+import { useEffect } from "react";
 
 const base64ToBlob = (base64: string, mimeType: string) => {
     const byteString = atob(base64.split(",")[1]);
@@ -41,7 +42,12 @@ interface Property {
 }
 function Saved() {
     const userId = JSON.parse(localStorage.getItem('userId') || '{}');
-    const { data: SavedPosts = [], isLoading, error } = useGetSavedPostsQuery({ tenantId: userId });
+    const { data: SavedPosts = [], isLoading, error , refetch  } = useGetSavedPostsQuery({ tenantId: userId });
+
+    useEffect(() => {
+        refetch();
+    }, []);
+
     return (
         <section id='Saved'>
             <LogedHeader />

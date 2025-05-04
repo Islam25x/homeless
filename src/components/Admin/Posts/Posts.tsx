@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useGetPropertiesQuery } from "../../RTK/PropertySlice/apiSlice";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import { useEffect } from "react";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -17,6 +18,7 @@ interface Property {
   mainImage: string;
   price: number;
   propertyApproval:string
+  location: string
 }
 
 // تحويل base64 إلى Blob
@@ -47,12 +49,18 @@ const getImageSrc = (image?: string) => {
 
 
 function Posts() {
-  const { data: properties = [], isLoading, error } = useGetPropertiesQuery();
+  const { data: properties = [], isLoading, error, refetch, isSuccess } = useGetPropertiesQuery();
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+    }
+  }, [isSuccess, refetch]);
   const pendingPosts = properties?.filter((property: Property) => property.propertyApproval === 'pending')
   return (
     <section id="Posts">
       <Container>
-        <h2 className="text-center my-4">Explore Rentals In Cairo</h2>
+        <h2 className="text-center my-4">Explore Rentals</h2>
         {isLoading ? (
           <p className="text-center">Loading...</p>
         ) : error ? (
@@ -91,7 +99,7 @@ function Posts() {
                     />
                     <div className="text-center mt-2">
                       <h5>{property.title}</h5>
-                      <p>Cairo</p>
+                      <p>{property.location}</p>
                       <p>Price: ${property.price}</p>
                     </div>
                   </div>

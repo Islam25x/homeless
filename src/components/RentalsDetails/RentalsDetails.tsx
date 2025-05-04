@@ -4,9 +4,12 @@ import { useGetPropertyByIdQuery } from '../RTK/PropertySlice/apiSlice';
 import { useAcceptPostMutation, useDeletePostMutation } from '../RTK/Admin/AdminApi';
 import { useSavePostMutation } from '../RTK/SaveSlice/SaveApi';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import './RentalsDetails.css';
 import Comments from './Comments/Comments';
+import { toast } from 'react-toastify';
 
 interface propertyImages {
   propertyImageId: number;
@@ -42,7 +45,7 @@ function RentalsDetails() {
   const userRole = localStorage.getItem('userRole') || '';
   const [isSaved, setIsSaved] = useState(false);
   const [showComments, setShowComments] = useState(false);
-
+  const navigate = useNavigate()
   const handleShowComments = () => {
     setShowComments(!showComments)
   }
@@ -67,27 +70,31 @@ function RentalsDetails() {
   const handleAccept = async () => {
     try {
       await AcceptLandlord({ propertyId: Number(id) }).unwrap();
-      refetch();
-      alert('Property accepted successfully!');
+      refetch()
+      navigate('/')
+      toast('Property accepted successfully!');
     } catch (err) {
       console.error(err);
-      alert('Failed to accept property.');
+      toast('Failed to accept property.');
     }
   };
 
   const handleDelete = async () => {
     try {
       await DeleteLandlord({ propertyId: Number(id) }).unwrap();
-      alert('Property deleted successfully!');
+      refetch();
+      navigate('/')
+      toast('Property deleted successfully!');
     } catch (err) {
       console.error(err);
-      alert('Failed to delete property.');
+      toast('Failed to delete property.');
     }
   };
 
   const handleSave = async () => {
     try {
-      await savePost({ tenantId: Number(userId), propertyId: propertie.id }).unwrap();
+      await savePost({ tenantId: Number(userId), propertyId: propertie.id } ).unwrap();
+      refetch();
       setIsSaved(!isSaved); // تحديث مباشر
     } catch (err) {
       console.error("Failed to save post:", err);
@@ -95,13 +102,13 @@ function RentalsDetails() {
   };
 
   if (isLoading) return <p className="text-center mt-5">Loading...</p>;
-  if (error || !propertie) return <p className="text-center mt-5 text-danger">Error loading property.</p>;
+  if (error || !propertie) return <p className="text-center mt-5 text-danger">You have to login</p>;
 
   return (
     <section id="RentalsDetails" className="py-4">
       <Container>
         <p className="text-muted" dir="ltr">
-          Home / <span className="text-dark">{propertie.title}</span>
+          <Link to='./'>Home</Link>  / <span className="text-dark">{propertie.title}</span>
         </p>
         <Row>
           <Col lg={2} md={2} sm={4}>

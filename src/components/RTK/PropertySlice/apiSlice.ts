@@ -1,9 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQueryWithReauth } from '../baseQueryWithAuth ';
+import { baseQuery } from '../baseQueryWithAuth ';
 
 export const PropertySlice = createApi({
     reducerPath: 'Property',
-    baseQuery: baseQueryWithReauth,
+    baseQuery: baseQuery,
     endpoints: (builder) => ({
         getProperties: builder.query<any, void>({
             query: () => 'RentMate/Property',

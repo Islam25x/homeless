@@ -99,7 +99,7 @@ const SignUp = () => {
       }
     } catch (err) {
       console.error("Signup error:", err);
-      toast.error("Registration failed. Please try again.");
+      // toast.error("Registration failed. Please try again.");
     }
   };
   

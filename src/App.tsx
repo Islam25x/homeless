@@ -64,7 +64,7 @@ const App: React.FC = () => {
         localStorage.clear();
         navigate('/');
       }
-    },10000);
+    }, 10000);
 
     return () => clearInterval(intervalId); // تنظيف الـ interval عند الخروج
   }, [refresh, logout, navigate]);
@@ -74,14 +74,32 @@ const App: React.FC = () => {
   return (
     <>
       <Routes>
-        {userRole === 'admin' ? <Route path="/" element={<Admin />} /> : <Route path="/" element={<Home />} />}
-        {userRole === 'landlord' ? <Route path="/AddProperties" element={<AddProperties />} /> : userRole === 'tenant' && <Route path="/savedProperties" element={<Saved />} />}
-        <Route path="/Login" element={<Login />} />
-        <Route path="/SignUp" element={<SignUp />} />
-        <Route path="/Account" element={<Account />} />
-        <Route path="/Chat" element={<Chat />} />
-        <Route path="/RentalsDetails/:id" element={<RentalsDetails />} />
-        <Route path="/SearchResult/:SearchResultLocation" element={<SearchResult />} />
+        {userRole === 'admin' ? (
+          <>
+            <Route path="/" element={<Admin />} />
+            <Route path="/RentalsDetails/:id" element={<RentalsDetails />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/SignUp" element={<SignUp />} />
+            {userRole === 'landlord' || userRole === 'tenant' ?(
+              <Route path="/Account" element={<Account />} />
+            ): ''}
+            <Route path="/RentalsDetails/:id" element={<RentalsDetails />} />
+            <Route path="/SearchResult/:SearchResultLocation" element={<SearchResult />} />
+            {userRole === 'landlord' && (
+              <Route path="/AddProperties" element={<AddProperties />} />
+            )}
+            {userRole === 'tenant' && (
+              <Route path="/savedProperties" element={<Saved />} />
+            )}
+            {(userRole === 'landlord' || userRole === 'tenant') && (
+              <Route path="/Chat" element={<Chat />} />
+            )}
+          </>
+        )}
       </Routes>
       <ToastContainer position="top-center" autoClose={3000} />
     </>

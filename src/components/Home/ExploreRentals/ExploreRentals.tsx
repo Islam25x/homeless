@@ -47,7 +47,7 @@ const ExploreRentals: React.FC = () => {
     (property: Property) => property.propertyApproval === "accepted"
   );
   const landlordRentals = properties.filter(
-    (property: Property) => property.landlordId === Number(userId)
+    (property: Property) => property.landlordId === Number(userId) &&  property.propertyApproval === "accepted"
   );
 
   const handleView = () => {

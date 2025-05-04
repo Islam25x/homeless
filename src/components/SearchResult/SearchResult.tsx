@@ -30,11 +30,15 @@ const getImageSrc = (image?: string) => {
     return image;
 };
 
+
 function SearchResult() {
     const { SearchResultLocation } = useParams<{ SearchResultLocation?: string }>();
     const [fromPrice, setFromPrice] = useState<number | undefined>();
     const [toPrice, setToPrice] = useState<number | undefined>();
     const [triggerSearch, setTriggerSearch] = useState(false);
+
+    const shouldSkip =
+        !triggerSearch && !(SearchResultLocation || fromPrice !== undefined || toPrice !== undefined);
 
     const { data: properties, isLoading, error } = useSearchPropertiesQuery(
         {
@@ -42,9 +46,8 @@ function SearchResult() {
             fromPrice,
             toPrice
         },
-        { skip: !triggerSearch && (fromPrice !== undefined || toPrice !== undefined) }
+        { skip: shouldSkip }
     );
-    
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,12 +62,15 @@ function SearchResult() {
         setTriggerSearch(true);
     };
 
-
     const userRole: any = localStorage.getItem('userRole') || '';
+
+    const filteredProperties = properties?.filter(
+        (property:any) => property.propertyApproval === "accepted"
+    );
 
     return (
         <>
-            {userRole? <LogedHeader /> : <MainHeader />}
+            {userRole ? <LogedHeader /> : <MainHeader />}
             <section id="SearchResult" className="py-4">
                 <Container>
                     <h2 className="mb-4 text-center">Search Results</h2>
@@ -98,11 +104,13 @@ function SearchResult() {
 
                     {/* ✅ Results */}
                     {isLoading && <p className="text-center mt-5">Loading...</p>}
-                    {error && <p className="text-center mt-5 text-danger">Error loading properties.</p>}
-                    {!isLoading && properties?.length === 0 && <p className="text-center mt-5 text-warning">No properties found.</p>}
+                    {error && <p className="text-center mt-5 text-danger">You have to login</p>}
+                    {!isLoading && filteredProperties?.length === 0 && (
+                        <p className="text-center mt-5 text-warning">No properties found.</p>
+                    )}
 
                     <Row className="g-4">
-                        {properties?.map((property: any) => (
+                        {filteredProperties?.map((property:any) => (
                             <Col key={property.id} lg={3} md={6} sm={12}>
                                 <Link to={`/RentalsDetails/${property.id}`} className="text-decoration-none text-dark">
                                     <Card>

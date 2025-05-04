@@ -12,33 +12,26 @@ import {
     Button,
 } from 'react-bootstrap';
 import { useGetusersChatQuery, useGetChatContentQuery, useSendMessageMutation } from '../RTK/ChatApi/ChatApi';
-import useSignalR from './useSignalR';
-import { HubConnectionBuilder } from '@microsoft/signalr';
 import LogedHeader from '../Headers/LogedHeader/LogedHeader';
 import './Chat.css';
 import { Link } from 'react-router-dom';
 
-interface ChatMessage {
-    content: string;
-    sender: string;
-    timestamp?: string;
-};
+// interface ChatMessage {
+//     content: string;
+//     sender: string;
+//     timestamp?: string;
+// }
 
 function Chat() {
     const storedId = localStorage.getItem('userId');
     const userId = storedId ? parseInt(storedId) : 0;
     const userRole = localStorage.getItem('userRole') || '';
     const username: any = JSON.parse(localStorage.getItem("user") || '[]');
-    console.log('name', username?.name);
-    console.log(userId);
 
     const [selectedReceiverId, setSelectedReceiverId] = useState<number | null>(null);
-    const [messageContent, setMessageContent] = useState(''); // تعديل النوع إلى string
-    const [liveMessages, setLiveMessages] = useState<ChatMessage[]>([]); // لحفظ الرسائل الحية
+    const [messageContent, setMessageContent] = useState('');
 
-    const { data: usersInChat, isLoading, isError, refetch } = useGetusersChatQuery({
-        userID: userId,
-    });
+    const { data: usersInChat, isLoading, isError, refetch } = useGetusersChatQuery({ userID: userId });
 
     const {
         data: chatMessages,
@@ -49,23 +42,12 @@ function Chat() {
         { userID: userId, receiverId: selectedReceiverId ?? 0 },
         { skip: selectedReceiverId === null }
     );
-    console.log(chatMessages);
+
+    const [sendMessage] = useSendMessageMutation();
 
     const selectedUser = usersInChat?.find((user: any) => user.senderId === selectedReceiverId);
     const userImage = selectedUser?.senderImage || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740';
     const userName = selectedUser?.senderName || 'Select a user';
-
-    const [sendMessage] = useSendMessageMutation();
-
-    // استقبال الرسائل عبر SignalR
-    const url = 'https://your-signalr-url'; // رابط الـ SignalR Hub الخاص بك
-    const token = localStorage.getItem('authToken'); // أو أي طريقة للحصول على الـ token
-
-    const newConnection = new HubConnectionBuilder()
-        .withUrl(url, {
-            accessTokenFactory: () => token || '', // تأكد من استخدام توكن صالح أو تمرير قيمة فارغة
-        })
-        .build();
 
     const handleSendMessage = async () => {
         if (messageContent.trim() === '') {
@@ -75,19 +57,19 @@ function Chat() {
 
         if (selectedReceiverId !== null) {
             try {
-                // إرسال الرسالة
-                await sendMessage({ userID: userId, receiverId: selectedReceiverId, message: messageContent });
+                await sendMessage({
+                    userID: userId,
+                    receiverId: selectedReceiverId,
+                    message: messageContent,
+                });
 
-                refetchChat(); // تحديث المحادثات بعد الإرسال
-                setMessageContent(''); // إعادة تعيين الحقل بعد الإرسال
+                refetchChat();
+                setMessageContent('');
             } catch (error) {
                 console.error('Error sending message:', error);
             }
         }
     };
-
-    // دمج الرسائل من الـ API و SignalR
-    const allMessages = [...(chatMessages || []), ...liveMessages];
 
     return (
         <>
@@ -127,7 +109,7 @@ function Chat() {
                                 >
                                     <div className="chat-user">
                                         <Image
-                                            src={chat.senderImage || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740'}
+                                            src={chat.senderImage || userImage}
                                             roundedCircle
                                             className="user-photo"
                                         />
@@ -167,18 +149,15 @@ function Chat() {
                                         <Alert variant="danger" className="text-center">Failed to load messages</Alert>
                                     ) : (
                                         <div className="messages p-3">
-                                            {allMessages?.length ? (
-                                                allMessages.map((msg: any, index: number) => (
-                                                    <div
-                                                        key={index}
-                                                        className={`message-bubble ${msg.senderName === username.name ? 'from-you' : 'from-them'}`}
-                                                    >
-                                                        <div className="message-text">{msg.content}</div>
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <p className="text-muted">No messages yet.</p>
-                                            )}
+                                            {(chatMessages as any[])?.map((msg, index) => (
+                                                <div
+                                                    key={index}
+                                                    className={`message-bubble ${msg.senderName === username.name ? 'from-you' : 'from-them'}`}
+                                                >
+                                                    <div className="message-text">{msg.content}</div>
+                                                </div>
+                                            ))
+                                            }
                                         </div>
                                     )}
                                 </div>
