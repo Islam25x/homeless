@@ -4,6 +4,8 @@ import { useGetPropertiesQuery } from "../../RTK/PropertySlice/apiSlice";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { useEffect } from "react";
+import { getImageSrc } from "../../../utils/imageHelpers";
+import { Property } from "../../../types/Property";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -11,41 +13,6 @@ import 'swiper/css/pagination';
 
 import './Posts.css';
 
-interface Property {
-  id: number;
-  title: string;
-  description: string;
-  mainImage: string;
-  price: number;
-  propertyApproval:string
-  location: string
-}
-
-// تحويل base64 إلى Blob
-const base64ToBlob = (base64: string, mimeType: string) => {
-  const byteString = atob(base64.split(",")[1]);
-  const byteArray = new Uint8Array(byteString.length);
-
-  for (let i = 0; i < byteString.length; i++) {
-    byteArray[i] = byteString.charCodeAt(i);
-  }
-  return new Blob([byteArray], { type: mimeType });
-};
-
-// تجهيز صورة صحيحة
-const getImageSrc = (image?: string) => {
-  if (!image) {
-    return "/default-image.png";
-  }
-  if (image.startsWith("data:image")) {
-    const blob = base64ToBlob(image, "image/png");
-    return URL.createObjectURL(blob);
-  }
-  if (image.length > 100 && !image.startsWith("http")) {
-    return `data:image/png;base64,${image}`;
-  }
-  return image;
-};
 
 
 function Posts() {
@@ -60,7 +27,7 @@ function Posts() {
   return (
     <section id="Posts">
       <Container>
-        <h2 className="text-center my-4">Explore Rentals</h2>
+        <h2 className="text-center my-4">Pending Rentals</h2>
         {isLoading ? (
           <p className="text-center">Loading...</p>
         ) : error ? (

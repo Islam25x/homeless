@@ -55,18 +55,26 @@ function Comments({ propertyId }: CommentsProps) {
           <p>Loading comments...</p>
         ) : error ? (
           <p className="text-danger">An error occurred while loading comments.</p>
-        ) : comments ? (
-          comments.map((comment: any) => (
-            <div key={comment.userId} className="comment-box p-2 mb-2 border rounded d-flex gap-2 align-items-start">
+        ) : comments && comments.length > 0 ? (
+          comments.map((comment: any, index: number) => (
+            <div
+              key={comment.id ?? `${comment.userId}-${index}`}
+              className="comment-box p-2 mb-2 border rounded d-flex gap-2 align-items-start"
+            >
               <img
-                src={comment.image || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740'}
+                src={
+                  comment.image ||
+                  'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740'
+                }
                 alt="User"
               />
               <div>
                 <strong>{comment.name}</strong>
                 <span className="text-muted ms-2">({comment.role})</span>
                 <p className="mb-0">{comment.commentContent}</p>
-                <small className="text-muted">{new Date(comment.createAt).toLocaleString()}</small>
+                <small className="text-muted">
+                  {new Date(comment.createAt).toLocaleString()}
+                </small>
               </div>
             </div>
           ))

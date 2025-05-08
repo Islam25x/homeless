@@ -78,19 +78,14 @@ const LogedHeader: React.FC = () => {
                       <span className="mt-1">Add Properties</span>
                     </NavDropdown.Item>
                   ) : (
-                    <NavDropdown.Item as={Link} to="/AddProperties" className="d-flex">
+                    <NavDropdown.Item as={Link} to="/MyProperties" className="d-flex">
                       <i className="fa-solid fa-building me-3 mt-1 align-content-center"></i>
                       <span className="mt-1">My properties</span>
                     </NavDropdown.Item>
                   )
                 }
                 {
-                  userRole === 'landlord' ? (
-                    <NavDropdown.Item as={Link} to="/Cart/CheckOut" className="d-flex">
-                      <i className="fa-solid fa-bag-shopping me-3 mt-1 align-content-center"></i>
-                      <span className="mt-1">Manage Rentals</span>
-                    </NavDropdown.Item>
-                  ) : (
+                  userRole === 'tenant' && (
                     <NavDropdown.Item as={Link} to="/savedProperties" className="d-flex">
                       <i className="fa-solid fa-bookmark me-3 mt-1 align-content-center"></i>
                       <span  className="mt-1">My collection</span>

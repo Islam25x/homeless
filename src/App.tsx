@@ -15,6 +15,7 @@ import RentalsDetails from "./components/RentalsDetails/RentalsDetails";
 import Admin from "./components/Admin/Dashboard";
 import SearchResult from "./components/SearchResult/SearchResult";
 import Saved from "./components/Saved/Saved";
+import MyProperties from './components/MyProperties/MyProperties';
 
 import "./App.css";
 
@@ -69,7 +70,6 @@ const App: React.FC = () => {
     return () => clearInterval(intervalId); // تنظيف الـ interval عند الخروج
   }, [refresh, logout, navigate]);
 
-  // localStorage.clear()
 
   return (
     <>
@@ -84,16 +84,19 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/SignUp" element={<SignUp />} />
-            {userRole === 'landlord' || userRole === 'tenant' ?(
+            {userRole === 'landlord' || userRole === 'tenant' ? (
               <Route path="/Account" element={<Account />} />
-            ): ''}
+            ) : ''}
             <Route path="/RentalsDetails/:id" element={<RentalsDetails />} />
             <Route path="/SearchResult/:SearchResultLocation" element={<SearchResult />} />
             {userRole === 'landlord' && (
               <Route path="/AddProperties" element={<AddProperties />} />
             )}
             {userRole === 'tenant' && (
-              <Route path="/savedProperties" element={<Saved />} />
+              <>
+                <Route path="/savedProperties" element={<Saved />} />
+                <Route path="/MyProperties" element={<MyProperties />} />
+              </>
             )}
             {(userRole === 'landlord' || userRole === 'tenant') && (
               <Route path="/Chat" element={<Chat />} />

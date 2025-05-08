@@ -2,40 +2,9 @@ import { useState } from "react";
 import { useGetPropertiesQuery } from "../../RTK/PropertySlice/apiSlice";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { getImageSrc } from "../../../utils/imageHelpers";
+import { Property } from "../../../types/Property";
 import "./ExploreRentals.css";
-
-// تحويل base64 إلى Blob
-const base64ToBlob = (base64: string, mimeType: string) => {
-  const byteString = atob(base64.split(",")[1]);
-  const byteArray = new Uint8Array(byteString.length);
-  for (let i = 0; i < byteString.length; i++) {
-    byteArray[i] = byteString.charCodeAt(i);
-  }
-  return new Blob([byteArray], { type: mimeType });
-};
-
-const getImageSrc = (image?: string) => {
-  if (!image) return "/default-image.png";
-  if (image.startsWith("data:image")) {
-    const blob = base64ToBlob(image, "image/png");
-    return URL.createObjectURL(blob);
-  }
-  if (image.length > 100 && !image.startsWith("http")) {
-    return `data:image/png;base64,${image}`;
-  }
-  return image;
-};
-
-interface Property {
-  id: number;
-  title: string;
-  description: string;
-  mainImage: string;
-  price: number;
-  propertyApproval: string;
-  location: string;
-  landlordId:number
-}
 
 const ExploreRentals: React.FC = () => {
   const [viewAll, setViewAll] = useState<boolean>(false);
@@ -44,7 +13,7 @@ const ExploreRentals: React.FC = () => {
 
   const { data: properties = [], isLoading, error } = useGetPropertiesQuery();
   const Posts = properties?.filter(
-    (property: Property) => property.propertyApproval === "accepted"
+    (property: Property) => property.propertyApproval === "accepted" && property.status === "available"
   );
   const landlordRentals = properties.filter(
     (property: Property) => property.landlordId === Number(userId) &&  property.propertyApproval === "accepted"
@@ -61,7 +30,7 @@ const ExploreRentals: React.FC = () => {
     <section id="ExploreRentals">
       <Container>
         <h2 className="text-center mb-4">
-          {userRole === "landlord" ? "My Rentals" : "Explore Rentals"}
+          {userRole === "landlord" ? "My properties" : "Explore Rentals"}
         </h2>
         <Row>
           {isLoading ? (

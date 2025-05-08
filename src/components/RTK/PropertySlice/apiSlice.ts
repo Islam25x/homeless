@@ -18,7 +18,26 @@ export const PropertySlice = createApi({
                 body: formData,
             }),
         }),
+        UpdateProperty: builder.mutation<any, { propertyId: number, formData: FormData }>({
+            query: ({ formData, propertyId }) => ({
+                url: `RentMate/Property/Update/${propertyId}`,
+                method: 'PUT',
+                body: formData,
+            }),
+        }),
+        DeleteProperty: builder.mutation<void, { propertyId: number }>({
+            query: ({ propertyId }) => ({
+                url: `/RentMate/Property/Delete/${propertyId}`,
+                method: 'DELETE',
+            }),
+        }),
+        DeletePropertyImage: builder.mutation<void, { propertyImageId: number }>({
+            query: ({ propertyImageId }) => ({
+                url: `/RentMate/Property/DeletePropertyImage/${propertyImageId}`,
+                method: 'DELETE',
+            }),
+        }),
     }),
 });
 
-export const { useGetPropertiesQuery, useGetPropertyByIdQuery , useAddPropertiesMutation } = PropertySlice
+export const { useGetPropertiesQuery, useGetPropertyByIdQuery, useAddPropertiesMutation, useUpdatePropertyMutation, useDeletePropertyMutation , useDeletePropertyImageMutation } = PropertySlice
