@@ -1,32 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
-    Container,
-    Row,
-    Col,
-    ListGroup,
-    Form,
-    Image,
-    Spinner,
-    Alert,
-    InputGroup,
-    Button,
+    Container, Row, Col, ListGroup, Form, Image,
+    Spinner, Alert, InputGroup, Button,
 } from 'react-bootstrap';
-import { useGetusersChatQuery, useGetChatContentQuery, useSendMessageMutation } from '../RTK/ChatApi/ChatApi';
+import {
+    useGetusersChatQuery,
+    useGetChatContentQuery,
+    useSendMessageMutation
+} from '../RTK/ChatApi/ChatApi';
 import LogedHeader from '../Headers/LogedHeader/LogedHeader';
+import useSignalR from './useSignalR';
 import './Chat.css';
-import { Link } from 'react-router-dom';
 
-// interface ChatMessage {
-//     content: string;
-//     sender: string;
-//     timestamp?: string;
-// }
+interface ChatMessage {
+    content: string;
+    senderName?: string;
+    timestamp?: string;
+}
 
 function Chat() {
     const storedId = localStorage.getItem('userId');
     const userId = storedId ? parseInt(storedId) : 0;
-    const userRole = localStorage.getItem('userRole') || '';
     const username: any = JSON.parse(localStorage.getItem("user") || '[]');
+    const signalRUrl = `https://rentmate.runasp.net/chatHub?userId=${userId}`;
+
+    const { connection, connectionState, messages , setMessages  } = useSignalR(signalRUrl);
 
     const [selectedReceiverId, setSelectedReceiverId] = useState<number | null>(null);
     const [messageContent, setMessageContent] = useState('');
@@ -45,15 +43,20 @@ function Chat() {
 
     const [sendMessage] = useSendMessageMutation();
 
+    useEffect(() => {
+        if (chatMessages) {
+            setMessages(chatMessages);
+        }
+    }, [chatMessages]);
+
+    console.log(messages);
+    
     const selectedUser = usersInChat?.find((user: any) => user.senderId === selectedReceiverId);
     const userImage = selectedUser?.senderImage || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740';
     const userName = selectedUser?.senderName || 'Select a user';
 
     const handleSendMessage = async () => {
-        if (messageContent.trim() === '') {
-            alert('Please enter a message before sending.');
-            return;
-        }
+        if (messageContent.trim() === '') return alert('Please enter a message before sending.');
 
         if (selectedReceiverId !== null) {
             try {
@@ -63,7 +66,16 @@ function Chat() {
                     message: messageContent,
                 });
 
-                refetchChat();
+                // أضف الرسالة فورًا محليًا
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        content: messageContent,
+                        senderName: username.name,
+                        timestamp: new Date().toISOString(),
+                    },
+                ]);
+
                 setMessageContent('');
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -71,18 +83,32 @@ function Chat() {
         }
     };
 
+    useEffect(() => {
+        if (!connection || connectionState !== 'Connected') return;
+
+        const receiveHandler = (message: ChatMessage) => {
+            console.log('✅ Received message via SignalR:', message);
+            setMessages((prev) => [...prev, message]);
+        };
+
+        connection.on('ReceiveMessage', receiveHandler);
+
+        return () => {
+            connection.off('ReceiveMessage', receiveHandler);
+        };
+    }, [connection, connectionState]);
+
     return (
         <>
             <LogedHeader />
             <Container fluid className="chat-container">
                 <Row style={{ borderTop: '1px solid #c8c8c8' }}>
-                    {/* Sidebar with users */}
+                    {/* Sidebar */}
                     <Col lg={4} md={4} sm={12} className="messenger-panel">
                         <h5 className="header my-3 text-dark">Chats</h5>
                         <Form.Control type="text" placeholder="Search Messenger" className="search-box" />
                         <div className="tabs d-flex justify-content-between my-2">
                             <span className="Inbox">Inbox</span>
-                            {userRole !== 'tenant' && <Link to='Requests' className='text-primary'>Requests</Link>}
                         </div>
 
                         {isLoading && (
@@ -104,7 +130,9 @@ function Chat() {
                                 <ListGroup.Item
                                     key={chat.senderId}
                                     className={`chat-item ${chat.unread ? 'unread' : ''}`}
-                                    onClick={() => setSelectedReceiverId(chat.senderId)}
+                                    onClick={() => {
+                                        setSelectedReceiverId(chat.senderId);
+                                    }}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <div className="chat-user">
@@ -130,11 +158,7 @@ function Chat() {
                         ) : (
                             <>
                                 <div className="chat-header d-flex align-items-center">
-                                    <Image
-                                        src={userImage}
-                                        roundedCircle
-                                        className="chat-avatar"
-                                    />
+                                    <Image src={userImage} roundedCircle className="chat-avatar" />
                                     <div className="chat-info ms-2">
                                         <div className="chat-name text-dark">{userName}</div>
                                     </div>
@@ -149,15 +173,14 @@ function Chat() {
                                         <Alert variant="danger" className="text-center">Failed to load messages</Alert>
                                     ) : (
                                         <div className="messages p-3">
-                                            {(chatMessages as any[])?.map((msg, index) => (
+                                            {messages.map((msg, index) => (
                                                 <div
                                                     key={index}
                                                     className={`message-bubble ${msg.senderName === username.name ? 'from-you' : 'from-them'}`}
                                                 >
                                                     <div className="message-text">{msg.content}</div>
                                                 </div>
-                                            ))
-                                            }
+                                            ))}
                                         </div>
                                     )}
                                 </div>

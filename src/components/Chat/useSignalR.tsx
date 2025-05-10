@@ -1,76 +1,51 @@
-// import { useState, useEffect } from "react";
-// import { HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
+import { useState, useEffect } from 'react';
+import * as signalR from '@microsoft/signalr';
 
-// const useSignalR = (url: string, token: string) => {
-//     const [connection, setConnection] = useState<any>(null);
-//     const [connectionState, setConnectionState] = useState<HubConnectionState | null>(null);
-//     const [error, setError] = useState<string | null>(null);
+const useSignalR = (hubUrl: string) => {
+    const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
+    const [connectionState, setConnectionState] = useState<'Disconnected' | 'Connecting' | 'Connected'>('Disconnected');
+    const [messages, setMessages] = useState<any[]>([]);
 
-//     // دالة لبدء الاتصال
-//     const startConnection = async () => {
-//         try {
-//             const newConnection = new HubConnectionBuilder()
-//                 .withUrl(url, { accessTokenFactory: () => token })
-//                 .build();
+    useEffect(() => {
+        let newConnection: signalR.HubConnection;
 
-//             newConnection.onclose(() => {
-//                 setConnectionState(HubConnectionState.Disconnected);
-//                 console.log("SignalR disconnected.");
-//             });
+        const connect = async () => {
+            if (connection) {
+                await connection.stop();
+            }
 
-//             newConnection.onreconnecting(() => {
-//                 setConnectionState(HubConnectionState.Reconnecting);
-//                 console.log("SignalR reconnecting...");
-//             });
+            newConnection = new signalR.HubConnectionBuilder()
+                .withUrl(hubUrl) // 🔴 لا يوجد accessTokenFactory
+                .withAutomaticReconnect()
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
 
-//             newConnection.onreconnected(() => {
-//                 setConnectionState(HubConnectionState.Connected);
-//                 console.log("SignalR reconnected.");
-//             });
+            newConnection.onreconnecting(() => setConnectionState('Connecting'));
+            newConnection.onreconnected(() => setConnectionState('Connected'));
+            newConnection.onclose(() => setConnectionState('Disconnected'));
 
-//             // محاولة بدء الاتصال
-//             await newConnection.start();
-//             setConnection(newConnection);
-//             setConnectionState(HubConnectionState.Connected);
-//             console.log("SignalR connected.");
-//         } catch (err: unknown) {
-//             // التحقق من نوع الخطأ إذا كان يحتوي على خاصية message
-//             if (err instanceof Error) {
-//                 setError("SignalR connection error: " + err.message);
-//                 console.error(err.message);
-//             } else {
-//                 setError("An unknown error occurred");
-//                 console.error("An unknown error occurred", err);
-//             }
+            try {
+                setConnectionState('Connecting');
+                await newConnection.start();
+                setConnection(newConnection);
+                setConnectionState('Connected');
+                console.log('✅ SignalR Connected (بدون توكن)');
+            } catch (err) {
+                console.error('❌ SignalR Connection failed:', err);
+                setConnectionState('Disconnected');
+            }
+        };
 
-//             // إعادة المحاولة بعد فترة قصيرة
-//             setTimeout(startConnection, 3000); // إعادة المحاولة بعد 3 ثواني
-//         }
-//     };
+        connect();
 
-//     // استخدام useEffect لإدارة الاتصال
-//     useEffect(() => {
-//         startConnection();
+        return () => {
+            if (newConnection) {
+                newConnection.stop();
+            }
+        };
+    }, [hubUrl]);
 
-//         // تنظيف الاتصال عند التفريغ
-//         return () => {
-//             if (connection) {
-//                 connection.stop();
-//                 console.log("SignalR connection stopped.");
-//             }
-//         };
-//     }, [url, token]);
+    return { connection, connectionState, messages, setMessages };
+};
 
-//     return { connection, connectionState, error };
-// };
-
-// export default useSignalR;
-import React from 'react'
-
-function useSignalR() {
-    return (
-        <div>useSignalR</div>
-    )
-}
-
-export default useSignalR
+export default useSignalR;
