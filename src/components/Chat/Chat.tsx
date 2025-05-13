@@ -10,13 +10,9 @@ import {
 } from '../RTK/ChatApi/ChatApi';
 import LogedHeader from '../Headers/LogedHeader/LogedHeader';
 import useSignalR from './useSignalR';
+import { ChatMessage } from '../../types/ChatMessage';
 import './Chat.css';
 
-interface ChatMessage {
-    content: string;
-    senderName?: string;
-    timestamp?: string;
-}
 
 function Chat() {
     const storedId = localStorage.getItem('userId');
@@ -24,7 +20,7 @@ function Chat() {
     const username: any = JSON.parse(localStorage.getItem("user") || '[]');
     const signalRUrl = `https://rentmate.runasp.net/chatHub?userId=${userId}`;
 
-    const { connection, connectionState, messages , setMessages  } = useSignalR(signalRUrl);
+    const { connection, connectionState, messages , setMessages , UsersChat , setUsersChat  } = useSignalR(signalRUrl);
 
     const [selectedReceiverId, setSelectedReceiverId] = useState<number | null>(null);
     const [messageContent, setMessageContent] = useState('');
@@ -42,6 +38,12 @@ function Chat() {
     );
 
     const [sendMessage] = useSendMessageMutation();
+    // console.log(usersInChat);
+        useEffect(() => {
+        if (usersInChat) {
+            setUsersChat(usersInChat);
+        }
+    }, [usersInChat]);
 
     useEffect(() => {
         if (chatMessages) {
@@ -49,9 +51,7 @@ function Chat() {
         }
     }, [chatMessages]);
 
-    console.log(messages);
-    
-    const selectedUser = usersInChat?.find((user: any) => user.senderId === selectedReceiverId);
+    const selectedUser = UsersChat?.find((user: any) => user.senderId === selectedReceiverId);
     const userImage = selectedUser?.senderImage || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740';
     const userName = selectedUser?.senderName || 'Select a user';
 
@@ -126,7 +126,7 @@ function Chat() {
                         )}
 
                         <ListGroup className="chat-list">
-                            {usersInChat?.map((chat: any) => (
+                            {UsersChat?.map((chat: any) => (
                                 <ListGroup.Item
                                     key={chat.senderId}
                                     className={`chat-item ${chat.unread ? 'unread' : ''}`}

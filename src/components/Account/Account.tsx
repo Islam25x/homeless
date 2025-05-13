@@ -41,7 +41,7 @@ const Account: React.FC = () => {
         {/* Top Navigation and Welcome Text */}
         <header className="d-flex justify-content-between mt-5">
           <p className="Path">
-            Home /<span className="text-dark"> My Account</span>
+            <Link to='/'>Home</Link> /<span className="text-dark"> My Account</span>
           </p>
           <p className="welcome text-dark">
             Welcome!<span className="text-primary"> {username.name}</span>
@@ -55,10 +55,12 @@ const Account: React.FC = () => {
               <h6>Manage My Account</h6>
               <ul>
                 <li className="text-primary">My Profile</li>
-                {userRole === 'landlord' ? <li>Manage properties</li> : <li>Add Properties</li>}
-                <Link to="/Cart/CheckOut">
-                  {userRole === 'landlord' ? <li>Manage Rental</li> : <li>My collection</li>}
-                </Link>
+                <li>
+                  {userRole === 'landlord' ? <Link to='/AddProperties'>Add Properties</Link> : <Link to='/MyProperties'>My Properties</Link>}
+                </li>
+                <li>
+                  {userRole === 'landlord' ? '' : <Link to='/savedProperties'>My collection</Link>}
+                </li>
               </ul>
             </div>
           </Col>

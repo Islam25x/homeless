@@ -5,6 +5,7 @@ const useSignalR = (hubUrl: string) => {
     const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
     const [connectionState, setConnectionState] = useState<'Disconnected' | 'Connecting' | 'Connected'>('Disconnected');
     const [messages, setMessages] = useState<any[]>([]);
+    const [UsersChat, setUsersChat] = useState<any[]>([]);
 
     useEffect(() => {
         let newConnection: signalR.HubConnection;
@@ -15,7 +16,9 @@ const useSignalR = (hubUrl: string) => {
             }
 
             newConnection = new signalR.HubConnectionBuilder()
-                .withUrl(hubUrl) // 🔴 لا يوجد accessTokenFactory
+                .withUrl(hubUrl, {
+                    accessTokenFactory: () => localStorage.getItem('token') || '',
+                })
                 .withAutomaticReconnect()
                 .configureLogging(signalR.LogLevel.Information)
                 .build();
@@ -24,12 +27,16 @@ const useSignalR = (hubUrl: string) => {
             newConnection.onreconnected(() => setConnectionState('Connected'));
             newConnection.onclose(() => setConnectionState('Disconnected'));
 
+            newConnection.on('UpdateUserList', (updatedUsers: any[]) => {
+            console.log("📨 Received updated user list from SignalR", updatedUsers);
+            setUsersChat(updatedUsers);
+        });
+
             try {
                 setConnectionState('Connecting');
                 await newConnection.start();
                 setConnection(newConnection);
                 setConnectionState('Connected');
-                console.log('✅ SignalR Connected (بدون توكن)');
             } catch (err) {
                 console.error('❌ SignalR Connection failed:', err);
                 setConnectionState('Disconnected');
@@ -45,7 +52,7 @@ const useSignalR = (hubUrl: string) => {
         };
     }, [hubUrl]);
 
-    return { connection, connectionState, messages, setMessages };
+    return { connection, connectionState, messages, setMessages , UsersChat , setUsersChat };
 };
 
 export default useSignalR;

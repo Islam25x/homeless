@@ -18,6 +18,13 @@ export const PropertySlice = createApi({
                 body: formData,
             }),
         }),
+        AddPropertyAlbumImage: builder.mutation<any, { propertyId: number; formData: FormData }>({
+            query: ({ propertyId, formData }) => ({
+                url: `RentMate/Property/AddPropertyImage?propertyId=${propertyId}`,
+                method: 'POST',
+                body: formData,
+            }),
+        }),
         UpdateProperty: builder.mutation<any, { propertyId: number, formData: FormData }>({
             query: ({ formData, propertyId }) => ({
                 url: `RentMate/Property/Update/${propertyId}`,
@@ -40,4 +47,4 @@ export const PropertySlice = createApi({
     }),
 });
 
-export const { useGetPropertiesQuery, useGetPropertyByIdQuery, useAddPropertiesMutation, useUpdatePropertyMutation, useDeletePropertyMutation , useDeletePropertyImageMutation } = PropertySlice
+export const { useGetPropertiesQuery, useGetPropertyByIdQuery, useAddPropertiesMutation, useUpdatePropertyMutation, useDeletePropertyMutation, useDeletePropertyImageMutation , useAddPropertyAlbumImageMutation } = PropertySlice

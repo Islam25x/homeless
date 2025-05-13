@@ -1,6 +1,6 @@
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useGetPropertyByIdQuery } from '../RTK/PropertySlice/apiSlice';
+import { useGetPropertyByIdQuery, useAddPropertyAlbumImageMutation } from '../RTK/PropertySlice/apiSlice';
 import { useAcceptPostMutation, useDeletePostMutation } from '../RTK/Admin/AdminApi';
 import { useDeletePropertyImageMutation, useDeletePropertyMutation, useUpdatePropertyMutation } from '../RTK/PropertySlice/apiSlice';
 import { useSavePostMutation } from '../RTK/SaveSlice/SaveApi';
@@ -10,6 +10,10 @@ import { toast } from 'react-toastify';
 import { useRentPropertyMutation, useDeleteRentPropertyMutation } from '../RTK/RentalRequestApi/RentalRequestApi';
 import { getImageSrc } from '../../utils/imageHelpers';
 import TenantRequests from './TenantRequests/TenantRequests';
+import { useSendMessageMutation } from '../RTK/ChatApi/ChatApi';
+import useSignalR from '../Chat/useSignalR';
+import { useGetChatContentQuery } from '../RTK/ChatApi/ChatApi';
+import { ChatMessage } from '../../types/ChatMessage';
 import './RentalsDetails.css';
 
 interface propertyImages {
@@ -23,10 +27,23 @@ function RentalsDetails() {
   const userRole = localStorage.getItem('userRole') || '';
   const [isSaved, setIsSaved] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [showTenantRequests, setShowTenantRequests] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const selectedFile = useRef<HTMLInputElement>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [messageContent, setMessageContent] = useState('');
+  const [selectedReceiverId, setSelectedReceiverId] = useState<number | null>(null);
+  const username: any = JSON.parse(localStorage.getItem("user") || '[]');
+  const {
+    data: chatMessages,
+  } = useGetChatContentQuery(
+    { userID: Number(userId), receiverId: selectedReceiverId ?? 0 },
+    { skip: selectedReceiverId === null }
+  );
+  const signalRUrl = `https://rentmate.runasp.net/chatHub?userId=${userId}`;
+  const { connection, connectionState, setMessages } = useSignalR(signalRUrl);
   const [formState, setFormState] = useState({
     title: '',
     price: '',
@@ -41,7 +58,7 @@ function RentalsDetails() {
   });
 
   console.log(property);
-  
+
   const [AcceptLandlord, { isLoading: isAcceptLoading }] = useAcceptPostMutation();
   const [DeleteLandlord, { isLoading: isDeleteLoading }] = useDeletePostMutation();
   const [savePost] = useSavePostMutation();
@@ -52,6 +69,26 @@ function RentalsDetails() {
     }
   }, [property]);
 
+  // signalR 
+  useEffect(() => {
+    if (chatMessages) {
+      setMessages(chatMessages);
+    }
+  }, [chatMessages]);
+  useEffect(() => {
+    if (!connection || connectionState !== 'Connected') return;
+
+    const receiveHandler = (message: ChatMessage) => {
+      console.log('✅ Received message via SignalR:', message);
+      setMessages((prev) => [...prev, message]);
+    };
+
+    connection.on('ReceiveMessage', receiveHandler);
+
+    return () => {
+      connection.off('ReceiveMessage', receiveHandler);
+    };
+  }, [connection, connectionState]);
   const handleAccept = async () => {
     try {
       await AcceptLandlord({ propertyId: Number(id) }).unwrap();
@@ -89,6 +126,9 @@ function RentalsDetails() {
   const handleShowComments = () => {
     setShowComments(!showComments);
     setShowTenantRequests(false);
+  };
+  const handleShowChat = () => {
+    setShowChat(!showChat);
   };
 
   const handleShowTenantRequests = () => {
@@ -140,7 +180,7 @@ function RentalsDetails() {
       toast.error('Failed to delete Image.');
     }
   };
-  
+
   const handleDeleteProperty = async () => {
     try {
       await deleteProperty(
@@ -168,11 +208,11 @@ function RentalsDetails() {
     formData.append('Price', formState.price);
     formData.append('Location', formState.location);
     formData.append('Description', formState.description);
-  
+
     if (selectedImage) {
       formData.append('Image', selectedImage);
     }
-  
+
     try {
       await updateProperty({ propertyId: Number(id), formData }).unwrap();
       toast.success('Property updated successfully!');
@@ -184,11 +224,52 @@ function RentalsDetails() {
     }
   };
 
+  const handleSendMessage = async () => {
+    if (messageContent.trim() === '') return alert('Please enter a message before sending.');
+    try {
+      await SendMessage({
+        userID: Number(userId),
+        receiverId: Number(property.landlordId),
+        message: messageContent,
+      });
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          content: messageContent,
+          senderName: username.name,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+
+      setMessageContent('');
+      setShowChat(false)
+      toast.success('Message Sent')
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const formData = new FormData();
+      const file = e.target.files[0];
+      formData.append(`Image`, file);
+
+      addPropertyAlbumImage({ propertyId: Number(id), formData });
+      toast.success('Images uploaded successfully');
+      refetch();
+    }
+  };
+
+
   const [RentProperty] = useRentPropertyMutation();
   const [DeleteRentProperty] = useDeleteRentPropertyMutation();
   const [deleteImage] = useDeletePropertyImageMutation();
   const [deleteProperty] = useDeletePropertyMutation();
   const [updateProperty] = useUpdatePropertyMutation();
+  const [SendMessage] = useSendMessageMutation()
+  const [addPropertyAlbumImage] = useAddPropertyAlbumImageMutation();
 
   if (isLoading) return <p className="text-center mt-5">Loading...</p>;
   if (error || !property) return <p className="text-center mt-5 text-danger">You have to login</p>;
@@ -196,7 +277,7 @@ function RentalsDetails() {
   return (
     <section id="RentalsDetails" className="py-4">
       <Container>
-        <p className="text-muted" dir="ltr">
+        <p className="text-muted">
           <Link to='/'>Home</Link> / <span className="text-dark">{property.title}</span>
         </p>
         <Row>
@@ -222,6 +303,22 @@ function RentalsDetails() {
                   />
                 </div>
               ))}
+              {userRole === 'landlord' && property.propertyImages.length < 4 && property.status === 'available' &&(
+                <>
+                  <button
+                    className='btn btn-light'
+                    onClick={() => selectedFile.current?.click()}
+                  >
+                    <i className="fa-solid fa-plus" style={{ fontSize: '3rem', padding: '2rem 0' }}></i>
+                  </button>
+                  <input
+                    type="file"
+                    ref={selectedFile}
+                    style={{ display: 'none' }}
+                    onChange={handleImageUpload}
+                  />
+                </>
+              )}
             </div>
           </Col>
 
@@ -263,6 +360,26 @@ function RentalsDetails() {
                   }}
                 />
                 <span>{property.landlordName || 'Unknown Landlord'}</span>
+                {/* send message to landlord  */}
+                {userRole === 'tenant' && (
+                  <>
+                    <button onClick={handleShowChat} className={showChat ? `d-none` : `d-block btn text-primary`}>
+                      <i className="fa-brands fa-rocketchat"></i>
+                    </button>
+                    <div className={!showChat ? `d-none` : `d-block d-flex ms-2`}>
+                      <input
+                        type="text"
+                        className="form-control mt-2"
+                        placeholder="Type your message..."
+                        value={messageContent}
+                        onChange={(e) => setMessageContent(e.target.value)}
+                      />
+                      <button onClick={handleSendMessage} className="btn btn-primary mt-2">
+                        Send
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="mt-2 d-flex align-items-center location-view">
@@ -419,7 +536,7 @@ function RentalsDetails() {
                       className="form-control"
                       value={formState.description}
                       onChange={(e) => setFormState({ ...formState, description: e.target.value })}
-                      style={{height:'8rem'}}
+                      style={{ height: '8rem' }}
                     />
                   </div>
                 </form>

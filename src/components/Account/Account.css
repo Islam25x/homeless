@@ -1,113 +1,117 @@
 #Account {
-    margin-bottom: 5rem;
+  margin-bottom: 5rem;
 }
 #Account .left ul {
-    margin: 1rem 0;
+  margin: 1rem 0;
+  list-style: none;
+}
+#Account .left ul a {
+  color: gray;
 }
 #Account .left ul li {
-    margin: 0.5rem 0;
-    color: gray;
-    list-style: none;
+  margin: 0.5rem 0;
 }
-a{
-    text-decoration: none;
+a {
+  text-decoration: none;
 }
-#Account .left ul li:hover {
-    cursor: pointer;
-    color: #0f8ac0;
+#Account .left ul a:hover {
+  cursor: pointer;
+  color: #0f8ac0;
 }
 
 /* Container Styling */
 #Account .right {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 2rem;
-    box-sizing: border-box;
-    margin: 0rem auto;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 2rem;
+  box-sizing: border-box;
+  margin: 0rem auto;
 }
 
 /* Section Headers */
 #Account .right h2 {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
 }
 .upload-btn {
-    width: 32px;
-    height: 32px;
-    bottom: -8px;
-    margin-left: 4rem;
-    background-color: #000;
-    transition: background-color 0.3s;
-  }
-  
-  .upload-btn:hover {
-    background-color: #1e293b;
-  }
-  
+  width: 32px;
+  height: 32px;
+  bottom: -8px;
+  margin-left: 4rem;
+  background-color: #000;
+  transition: background-color 0.3s;
+}
+
+.upload-btn:hover {
+  background-color: #1e293b;
+}
+
 /* Input Fields */
 #Account .right .right-ctn {
-    margin-left: 2rem;
+  margin-left: 2rem;
 }
-#Account .right .in-container{
-    width: 100%;
+#Account .right .in-container {
+  width: 100%;
 }
-#Account .right .in-container h5{
-    margin-bottom: .5rem;
+#Account .right .in-container h5 {
+  margin-bottom: 0.5rem;
 }
 #Account .right input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 1rem;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    background-color: #f0efef;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #f0efef;
+  box-sizing: border-box;
 }
 
 #Account .right input:focus {
-    outline: none;
-    border-color: #0f8ac0;
-    box-shadow: 0 0 5px rgba(75, 90, 255, 0.3);
+  outline: none;
+  border-color: #0f8ac0;
+  box-shadow: 0 0 5px rgba(75, 90, 255, 0.3);
 }
 
 /* Button Container */
 .button-container {
-    display: flex;
-    justify-content: end;
+  display: flex;
+  justify-content: end;
 }
 
 /* Cancel Button */
 .button-container .cancel-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    margin-right: 1rem;
-    background-color: transparent;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-right: 1rem;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .button-container .cancel-btn:hover {
-    color: #0f8ac0;
+  color: #0f8ac0;
 }
 
 /* Save Button */
-.button-container .save-btn , #Contact .input-section .save-btn{
-    padding: 15px 50px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    background-color: #0f8ac0;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.button-container .save-btn,
+#Contact .input-section .save-btn {
+  padding: 15px 50px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #0f8ac0;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.button-container .save-btn:hover ,#Contact .input-section .save-btn:hover{
-    background-color: #046a95;
+.button-container .save-btn:hover,
+#Contact .input-section .save-btn:hover {
+  background-color: #046a95;
 }
