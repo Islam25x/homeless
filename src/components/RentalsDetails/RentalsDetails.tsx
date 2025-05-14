@@ -287,7 +287,7 @@ function RentalsDetails() {
               {property.propertyImages.map((propertyImage: propertyImages, index: number) => (
                 <div className="border p-1 position-relative" key={`${propertyImage.propertyImageId}-${index}`}>
                   {
-                    userRole === 'landlord' && property.status === 'available' && (
+                    userRole === 'landlord' && property.status === 'available' && Number(userId) === Number(property.landlordId) && (
                       <button
                         className='btn btn-light position-absolute top-0 end-0'
                         onClick={() => handleDeleteImage(propertyImage.propertyImageId)}
@@ -303,7 +303,7 @@ function RentalsDetails() {
                   />
                 </div>
               ))}
-              {userRole === 'landlord' && property.propertyImages.length < 4 && property.status === 'available' &&(
+              {userRole === 'landlord' && property.propertyImages.length < 4 && property.status === 'available' && Number(userId) === Number(property.landlordId) &&(
                 <>
                   <button
                     className='btn btn-light'
@@ -447,7 +447,7 @@ function RentalsDetails() {
                   <button onClick={handleShowComments} className="btn btn-outline-primary">
                     <i className="fas fa-comment"></i>
                   </button>
-                  {userRole === 'landlord' && (
+                  {userRole === 'landlord' && Number(userId) === Number(property.landlordId) && (
                     <>
                       <button onClick={handleShowTenantRequests} className="btn btn-outline-primary">
                         <i className="fa-solid fa-clock-rotate-left"></i>
