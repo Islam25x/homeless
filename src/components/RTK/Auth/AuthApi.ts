@@ -43,7 +43,7 @@ export const authApi = createApi({
                 method: 'POST',
             }),
         }),
-        refresh: builder.mutation<AuthModelDto, { refreshToken: string; userId: string }>({
+        refresh: builder.mutation<AuthModelDto, { refreshToken: string; userId: number }>({
             query: ({ refreshToken, userId }) => ({
                 url: 'RentMate/Auth/refresh',
                 method: 'POST',

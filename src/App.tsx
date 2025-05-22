@@ -25,14 +25,14 @@ const App: React.FC = () => {
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
 
-
+  
   useEffect(() => {
     const intervalId = setInterval(() => {
       const refreshToken = localStorage.getItem('refreshToken');
-      const userId = localStorage.getItem('userId') || '';
+      const userId = localStorage.getItem('userId') || '';  
 
       if (refreshToken) {
-        refresh({ refreshToken, userId })
+        refresh({ refreshToken,  userId: Number(userId) })
           .then((res: any) => {
             console.log("Refresh response:", res);
 

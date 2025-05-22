@@ -2,6 +2,7 @@ import { fetchBaseQuery } from '@reduxjs/toolkit/query';
 
 export const baseQuery = fetchBaseQuery({
     baseUrl: 'https://rentmate.runasp.net/', 
+    credentials: 'include',
     prepareHeaders: (headers) => {
         const token = localStorage.getItem('token');
         
