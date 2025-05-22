@@ -51,7 +51,7 @@ const ManageProperty = () => {
               <Col lg={6} md={6}>
                 <div className="card-img2">
                   <img
-                    src="https://www.apartments.com/a/5a10d2/modules/homepagev2/content/images/widgets/widget_lease_100_online_1407.png"
+                    src="https://c1.wallpaperflare.com/preview/804/692/844/family-house-pumpkins-halloween-single-family-home.jpg"
                     className="img-fluid rounded-start"
                     alt="Lease 100% Online"
                   />
