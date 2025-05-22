@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQueryWithReauth } from './baseQueryWithReauth';
+import { baseQuery } from '../baseQueryWithAuth ';
 
 interface NewUserDto {
     name: string;
@@ -18,34 +18,34 @@ interface AuthModelDto {
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: baseQueryWithReauth,
+    baseQuery: baseQuery,
     endpoints: (builder) => ({
         getLandlordPending: builder.query<any, void>({
-            query: () => 'LandlordsRequests',
+            query: () => 'RentMate/Auth/LandlordsRequests',
         }),
         login: builder.mutation<AuthModelDto, { name: string; password: string }>({
             query: ({ name, password }) => ({
-                url: 'Login',
+                url: 'RentMate/Auth/Login',
                 method: 'POST',
                 params: { name, password },
             }),
         }),
         register: builder.mutation<AuthModelDto | { message: string }, { userDto: NewUserDto; role: string }>({
             query: ({ userDto, role }) => ({
-                url: `Register?role=${role}`,
+                url: `RentMate/Auth/Register?role=${role}`,
                 method: 'POST',
                 body: userDto,
             }),
         }),
         Logout: builder.mutation<any, void>({
             query: () => ({
-                url: 'logout',
+                url: 'RentMate/Auth/logout',
                 method: 'POST',
             }),
         }),
         refresh: builder.mutation<AuthModelDto, { refreshToken: string; userId: string }>({
             query: ({ refreshToken, userId }) => ({
-                url: 'refresh',
+                url: 'RentMate/Auth/refresh',
                 method: 'POST',
                 body: { refreshToken, userId },
             }),

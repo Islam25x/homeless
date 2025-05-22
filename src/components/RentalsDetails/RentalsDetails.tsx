@@ -29,7 +29,9 @@ function RentalsDetails() {
   const [showComments, setShowComments] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [showTenantRequests, setShowTenantRequests] = useState(false);
+  // rent Now 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // add album img 
   const selectedFile = useRef<HTMLInputElement>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -193,6 +195,7 @@ function RentalsDetails() {
       toast.error('Failed to delete Property.');
     }
   };
+  // show Edit property Modal
   const openEditModal = () => {
     setFormState({
       title: property.title || '',
@@ -202,6 +205,7 @@ function RentalsDetails() {
     });
     setShowEditModal(true);
   };
+  // Update Property in Modal
   const handleUpdateProperty = async () => {
     const formData = new FormData();
     formData.append('Title', formState.title);
@@ -481,6 +485,7 @@ function RentalsDetails() {
           </Col>
         </Row>
       </Container>
+      {/* edit Modal */}
       {showEditModal && (
         <div className="modal d-block" tabIndex={-1} role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog" role="document">
