@@ -76,20 +76,6 @@ Welcome to the **Property Rental Platform** – a full-stack solution designed t
 ├── App.css / index.css      # Global styles
 ```
 
-## 🧾 Backend Folder Structure
-
-```
-📁 Controllers         --> API endpoints
-📁 DTOModels           --> Request/Response models
-📁 Data
-    ├── Models         --> Entity models
-    └── DbContext      --> Database access (Scaffolded using Reverse Engineering)
-📁 Extensions          --> JWT + Service registration helpers
-📁 Hub                 --> SignalR hub for real-time chat 💬
-📁 Repositories        --> Generic Repository pattern for data access
-📁 Services            --> Business logic layer
-📁 UOF (Unit of Work)  --> Transaction management layer
-```
 ## 🧱 Tech Stack
 
 | Layer     | Tech                                 |
