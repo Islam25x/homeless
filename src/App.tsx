@@ -69,8 +69,6 @@ const App: React.FC = () => {
 
     return () => clearInterval(intervalId); // تنظيف الـ interval عند الخروج
   }, [refresh, logout, navigate]);
-
-
   return (
     <>
       <Routes>

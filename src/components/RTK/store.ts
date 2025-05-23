@@ -7,6 +7,7 @@ import { SaveApi } from './SaveSlice/SaveApi';
 import { ChatApi } from './ChatApi/ChatApi';
 import { CommentSlice } from './CommentApi/CommentApi';
 import { PropertyRequestApi } from './RentalRequestApi/RentalRequestApi';
+import { UserApi } from './UserApi/UserApi';
 
 export const store = configureStore({
   reducer: {
@@ -17,8 +18,9 @@ export const store = configureStore({
     [SaveApi.reducerPath]: SaveApi.reducer,
     [ChatApi.reducerPath]: ChatApi.reducer,
     [CommentSlice.reducerPath]: CommentSlice.reducer,
-    [PropertyRequestApi.reducerPath]: PropertyRequestApi.reducer
+    [PropertyRequestApi.reducerPath]: PropertyRequestApi.reducer,
+    [UserApi.reducerPath]: UserApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(PropertySlice.middleware, authApi.middleware, AdminApi.middleware , SearchApi.middleware , SaveApi.middleware , ChatApi.middleware , CommentSlice.middleware , PropertyRequestApi.middleware),
+    getDefaultMiddleware().concat(PropertySlice.middleware, authApi.middleware, AdminApi.middleware, SearchApi.middleware, SaveApi.middleware, ChatApi.middleware, CommentSlice.middleware, PropertyRequestApi.middleware, UserApi.middleware),
 });

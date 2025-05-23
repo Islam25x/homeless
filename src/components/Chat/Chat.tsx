@@ -8,6 +8,7 @@ import {
     useGetChatContentQuery,
     useSendMessageMutation
 } from '../RTK/ChatApi/ChatApi';
+import { getImageSrc } from '../../utils/imageHelpers';
 import LogedHeader from '../Headers/LogedHeader/LogedHeader';
 import useSignalR from './useSignalR';
 import { ChatMessage } from '../../types/ChatMessage';
@@ -50,6 +51,8 @@ function Chat() {
             setMessages(chatMessages);
         }
     }, [chatMessages]);
+    console.log(UsersChat);
+    
 
     const selectedUser = UsersChat?.find((user: any) => user.senderId === selectedReceiverId);
     const userImage = selectedUser?.senderImage || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740';
@@ -137,7 +140,7 @@ function Chat() {
                                 >
                                     <div className="chat-user">
                                         <Image
-                                            src={chat.senderImage || userImage}
+                                            src={chat.senderImage ? getImageSrc(chat.senderImage) : userImage}
                                             roundedCircle
                                             className="user-photo"
                                         />
@@ -158,12 +161,11 @@ function Chat() {
                         ) : (
                             <>
                                 <div className="chat-header d-flex align-items-center">
-                                    <Image src={userImage} roundedCircle className="chat-avatar" />
+                                    <Image src={userImage ? getImageSrc(userImage) : userImage} roundedCircle className="chat-avatar" />
                                     <div className="chat-info ms-2">
                                         <div className="chat-name text-dark">{userName}</div>
                                     </div>
                                 </div>
-
                                 <div className="chat-body">
                                     {isLoadingChat ? (
                                         <div className="text-center mt-5">

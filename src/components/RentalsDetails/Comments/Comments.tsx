@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGetCommentsQuery, useAddCommentMutation } from '../../RTK/CommentApi/CommentApi';
+import { getImageSrc } from '../../../utils/imageHelpers';
 import './Comments.css';
 
 interface CommentsProps {
@@ -16,7 +17,6 @@ function Comments({ propertyId }: CommentsProps) {
       skip: !propertyId || isNaN(propertyId),
     }
   );
-
   const [addComment] = useAddCommentMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,6 +36,7 @@ function Comments({ propertyId }: CommentsProps) {
       console.error('Failed to add comment:', err);
     }
   };
+  console.log(comments);
 
   return (
     <section id="Comment" className="mt-4">
@@ -63,8 +64,10 @@ function Comments({ propertyId }: CommentsProps) {
             >
               <img
                 src={
-                  comment.image ||
-                  'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740'
+                  comment.image ?
+
+                    getImageSrc(comment.image) :
+                    'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740'
                 }
                 alt="User"
               />

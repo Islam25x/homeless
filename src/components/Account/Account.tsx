@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { useUploadUserPhotoMutation, useGetUserPhotoQuery } from "../RTK/UserApi/UserApi";
 import { Link } from "react-router";
 import "./Account.css";
 
@@ -10,28 +11,36 @@ const Account: React.FC = () => {
 
   const username: any = JSON.parse(localStorage.getItem('user') || '{}');
   const userRole = localStorage.getItem('userRole') || '';
+  const userId = localStorage.getItem('userId') || '';
   const firstName: string = username.name ? username.name.split(" ")[0] : "null";
   const lastName: string = username.name ? username.name.split(" ")[1] : "null";
-  // State for uploaded image (future use)
-  const [image, setImage] = useState<string | null>(null);
+  const { data: profileImage } = useGetUserPhotoQuery({
+    id: Number(userId)
+  })
+  const [uploadUserPhoto] = useUploadUserPhotoMutation()
+
+  console.log(profileImage);
+  
+
+  const userImage =
+  profileImage?.image && typeof profileImage.image === "string"
+    ? `data:image/jpeg;base64,${profileImage.image}`
+    : 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740';
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Trigger hidden input click
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
+// const userImage ='https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740';
+const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-  // Handle uploaded image preview (optional to use)
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  uploadUserPhoto({ Id: Number(userId), file })
+};
+
+
 
   return (
     <section id="Account">
@@ -77,15 +86,11 @@ const Account: React.FC = () => {
                     className="rounded-circle bg-secondary d-flex justify-content-center align-items-center text-white fs-2"
                     style={{ width: "96px", height: "96px", overflow: "hidden" }}
                   >
-                    {image ? (
-                      <img
-                        src={image}
-                        alt="Avatar"
-                        className="w-100 h-100 rounded-circle object-fit-cover"
-                      />
-                    ) : (
-                      "I"
-                    )}
+                    <img
+                      src={userImage}
+                      alt="Avatar"
+                      className="w-100 h-100 rounded-circle object-fit-cover"
+                    />
                   </div>
 
                   {/* Upload Button */}

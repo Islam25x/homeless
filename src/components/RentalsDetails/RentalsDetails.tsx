@@ -307,7 +307,7 @@ function RentalsDetails() {
                   />
                 </div>
               ))}
-              {userRole === 'landlord' && property.propertyImages.length < 4 && property.status === 'available' && Number(userId) === Number(property.landlordId) &&(
+              {userRole === 'landlord' && property.propertyImages.length < 4 && property.status === 'available' && Number(userId) === Number(property.landlordId) && (
                 <>
                   <button
                     className='btn btn-light'
@@ -353,7 +353,7 @@ function RentalsDetails() {
 
               <div className="mt-2 d-flex align-items-center location-view">
                 <img
-                  src={property.landlordImage || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg'}
+                  src={property.landlordImage ? getImageSrc(property.landlordImage) : 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg'}
                   alt="Landlord"
                   style={{
                     width: '20px',
