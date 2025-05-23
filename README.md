@@ -3,6 +3,12 @@
 
 Welcome to the **Property Rental Platform** – a full-stack solution designed to seamlessly connect **Landlords** 🧑‍💼 and **Tenants** 👨‍💻, with **Admins** 🛡️ managing the ecosystem. From listing properties to real-time chat and rental proposals, this system streamlines property rentals with ease and efficiency.
 
+### 👥 Collaborator
+
+- 🧑‍💻 **GitHub**: <a href="https://github.com/Osama1010C" target="_blank" rel="noopener noreferrer">Osama Ahmed</a> — Backend developer  
+- 📂 **Backend Project Repository**: <a href="https://github.com/Osama1010C/RentMate.git" target="_blank" rel="noopener noreferrer">RentMate API Repo</a> — Source code.
+
+
 ## 🚀 Live Demo — Try it Now!
 
 - 🌍 **Frontend**: [Homeless (Vercel)](https://homeless-lovat.vercel.app/)
