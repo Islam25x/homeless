@@ -86,7 +86,7 @@ const App: React.FC = () => {
               <Route path="/Account" element={<Account />} />
             ) : ''}
             <Route path="/RentalsDetails/:id" element={<RentalsDetails />} />
-            <Route path="/SearchResult/:SearchResultLocation" element={<SearchResult />} />
+            <Route path="/SearchResult/:location?/:from?/:to?" element={<SearchResult />} />
             {userRole === 'landlord' && (
               <Route path="/AddProperties" element={<AddProperties />} />
             )}

@@ -28,8 +28,8 @@ const MainHeader: React.FC = () => {
       <Navbar expand="lg" className="sticky-top">
         <Container fluid className="ms-1 me-1">
           {/* Logo */}
-          <Navbar.Brand href="/">
-            <img src="images/logo.png" alt="logo" className="me-2" style={{width:'50px'}} />
+          <Navbar.Brand href="/" data-aos="fade-right">
+            <img src="images/logo.png" alt="logo" className="me-2" style={{ width: '50px' }} />
             TheHomeless.org
           </Navbar.Brand>
 
@@ -39,7 +39,9 @@ const MainHeader: React.FC = () => {
           {/* Nav links */}
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="nav ms-auto d-flex align-items-center">
-              <Nav.Link onClick={() => handleShow("Register")} className="navlink">
+              <Nav.Link onClick={() => handleShow("Register")} className="navlink" data-aos="fade-down"
+                data-aos-easing="linear"
+                data-aos-duration="500">
                 Manage Rentals
               </Nav.Link>
 
@@ -49,6 +51,9 @@ const MainHeader: React.FC = () => {
                   key={item}
                   className="navlink"
                   onClick={() => handleShow(item as "Sign In" | "Register")}
+                  data-aos="fade-down"
+                  data-aos-delay="300"
+                  data-aos-duration="500"
                 >
                   {item}
                 </Nav.Link>
@@ -58,6 +63,9 @@ const MainHeader: React.FC = () => {
               <Button
                 onClick={() => handleShow("Register")}
                 variant="dark"
+                data-aos="fade-down"
+                data-aos-delay="500"
+                data-aos-duration="500"
                 className="ms-2"
               >
                 Add Property

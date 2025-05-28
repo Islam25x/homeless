@@ -1,51 +1,71 @@
-import { useState, ChangeEvent, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useEffect, useState } from 'react';
+import { useSpring, animated } from '@react-spring/web'
+import { useGetUserStatisticsQuery } from '../../RTK/UserApi/UserApi';
+import { Col, Container, Row } from "react-bootstrap";
+import PropertySearch from "./PropertySearch/PropertySearch";
 import "./HomeTop.css";
 
+// Animated number counter component
+const Number: React.FC<{ n: number }> = ({ n }) => {
+  const { number } = useSpring({
+    from: { number: 0 },
+    number: n,
+    delay: 200,
+    config: { mass: 1, tension: 20, friction: 10 },
+  });
+
+  return <animated.div>{number.to((n) => n.toFixed(0))}</animated.div>;
+};
 const HomeTop = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const navigate = useNavigate();
-
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleSearchSubmit = (e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/SearchResult/${encodeURIComponent(searchTerm.trim())}`);
-    }
-  };
-
+  const [startAnimation, setStartAnimation] = useState(false);
+  const { data } = useGetUserStatisticsQuery()
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY < 1000) {
+        setStartAnimation(true);
+      } else {
+        setStartAnimation(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   return (
     <main>
-      <div className="Body">
-        <div className="landing">
-          <div className="text-center">
-            <h1>Homeless? Get a home now!</h1>
-            <p>Helping 100 million homeless people find a home.</p>
-          </div>
-
-          {/* Search Input */}
-          <form className="search-input text-center" onSubmit={handleSearchSubmit}>
-            <input
-              type="text"
-              placeholder="Search by location"
-              className="rounded-pill"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-            {/* Search icon click also triggers submit */}
-            <i
-              className="fa-solid fa-magnifying-glass"
-              onClick={handleSearchSubmit}
-              role="button"
-              style={{ cursor: "pointer" }}
-            ></i>
-          </form>
+      <Container fluid>
+        <Row>
+          <Col lg={5} md={5} sm={12} data-aos="fade-right">
+            <div className="home-ctn">
+              <h1>Find A House That Suit You</h1>
+              <p>Want to find a home? We are ready to help you find one that suits your lifestyle and needs</p>
+              <button>Get Started</button>
+              {startAnimation && data && (
+                <Row className="stats mt-5">
+                  <Col>
+                    <Number n={data.numberOfUsers} />
+                    <p>Number of Users</p>
+                  </Col>
+                  <Col>
+                    <Number n={data.numberOfProperties} />
+                    <p>Listed Properties</p>
+                  </Col>
+                  <Col>
+                    <Number n={data.numberOfLandlords} />
+                    <p>Number of Landlords</p>
+                  </Col>
+                </Row>
+              )}
+            </div>
+          </Col>
+          <Col lg={7} md={7} data-aos="fade-left">
+            <img src="images\home copy svg.svg" alt="homeImage" style={{ width: '100%' }} />
+          </Col>
+        </Row>
+        <div className="search" data-aos="fade-up"
+          data-aos-duration="2000">
+          <PropertySearch />
         </div>
-      </div>
+      </Container>
     </main>
   );
 };

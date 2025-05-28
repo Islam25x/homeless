@@ -1,20 +1,25 @@
 footer{
     border-top: 1px solid #cacaca;
-    background-color: #f9f9f9;
+    color: white;
+    background-color: black;
     font-size: 1.15rem;
-    padding: 4em;
+    padding: 22rem 0 1rem;
+    position: relative;
 }
 footer .left img{
     border-radius: 1rem;
     margin-right: 1rem;
 }
 footer p{
-    color: gray;
+    color: white;
     margin-top: -1rem;
 }
 footer .social-icons .btn{
     border-radius: 50%;
     margin-left: .2rem;
+}
+footer ul li a{
+    color: white !important;
 }
 footer ul li:hover{
     text-decoration: underline;

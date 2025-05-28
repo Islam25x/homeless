@@ -1,6 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '../baseQueryWithAuth ';
-
+interface DashboardStats {
+    numberOfUsers: number;
+    numberOfTenants: number;
+    numberOfLandlords: number;
+    numberOfProperties: number;
+}
 
 export const UserApi = createApi({
     reducerPath: 'UserApi',
@@ -23,10 +28,14 @@ export const UserApi = createApi({
                 };
             },
         }),
+        getUserStatistics: builder.query<DashboardStats, void>({
+            query: () => `RentMate/User/Statistics`,
+        }),
     }),
 });
 
 export const {
     useGetUserPhotoQuery,
-    useUploadUserPhotoMutation
+    useUploadUserPhotoMutation,
+    useGetUserStatisticsQuery
 } = UserApi;

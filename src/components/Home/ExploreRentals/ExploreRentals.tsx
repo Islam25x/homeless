@@ -4,6 +4,8 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getImageSrc } from "../../../utils/imageHelpers";
 import { Property } from "../../../types/Property";
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import "./ExploreRentals.css";
 
 const ExploreRentals: React.FC = () => {
@@ -16,7 +18,7 @@ const ExploreRentals: React.FC = () => {
     (property: Property) => property.propertyApproval === "accepted" && property.status === "available"
   );
   const landlordRentals = properties.filter(
-    (property: Property) => property.landlordId === Number(userId) &&  property.propertyApproval === "accepted" && property.landlordId === Number(userId)
+    (property: Property) => property.landlordId === Number(userId) && property.propertyApproval === "accepted" && property.landlordId === Number(userId)
   );
 
   const handleView = () => {
@@ -24,14 +26,27 @@ const ExploreRentals: React.FC = () => {
   };
 
   console.log(Posts);
-  
+
 
   return (
     <section id="ExploreRentals">
       <Container>
-        <h2 className="text-center mb-4">
-          {userRole === "landlord" ? "My properties" : "Explore Rentals"}
-        </h2>
+        <div className="BestSelling-Top d-flex justify-content-between flex-wrap" data-aos="fade-right">
+          <h2 className="text-center mb-4">
+            {userRole === "landlord" ? "My properties" : "Explore Rentals"}
+          </h2>
+          {Posts.length > 4 && (
+            <div className="ExploreRentals-bottom text-center mt-4">
+              <Button
+                className={viewAll ? "view-more-btn active" : "view-more-btn"}
+                variant="dark"
+                onClick={handleView}
+              >
+                {viewAll ? "View Less" : "View More"}
+              </Button>
+            </div>
+          )}
+        </div>
         <Row>
           {isLoading ? (
             <p className="text-center">Loading...</p>
@@ -47,10 +62,12 @@ const ExploreRentals: React.FC = () => {
                 ? landlordRentals
                 : Posts
               : userRole === "landlord"
-              ? landlordRentals.slice(0, 4)
-              : Posts.slice(0, 4)
+                ? landlordRentals.slice(0, 4)
+                : Posts.slice(0, 4)
             ).map((property: Property) => (
-              <Col key={property.id} lg={3} md={6} sm={12}>
+              <Col key={property.id} lg={3} md={6} sm={12}
+                data-aos="fade-up"
+                data-aos-duration="1000">
                 <Link to={`/RentalsDetails/${property.id}`}>
                   <Card className="card mt-4">
                     <Card.Img
@@ -62,9 +79,12 @@ const ExploreRentals: React.FC = () => {
                           "/default-image.png";
                       }}
                     />
-                    <Card.Body className="text-center">
+                    <Card.Body className="align-items-center">
+                      <div className="d-flex mb-2">
+                        <FontAwesomeIcon className="mt-1" icon={faMapMarkerAlt} />
+                        <Card.Text>{property.location}</Card.Text>
+                      </div>
                       <Card.Title>{property.title}</Card.Title>
-                      <Card.Text>{property.location}</Card.Text>
                       <Card.Text>Price: ${property.price}</Card.Text>
                     </Card.Body>
                   </Card>
@@ -73,20 +93,6 @@ const ExploreRentals: React.FC = () => {
             ))
           )}
         </Row>
-
-        {Posts.length > 4 && (
-          <div className="ExploreRentals-bottom text-center mt-4">
-            <Button
-              className={viewAll ? "view-more-btn active" : "view-more-btn"}
-              variant="dark"
-              onClick={handleView}
-            >
-              {viewAll ? "View Less" : "View More"}
-            </Button>
-          </div>
-        )}
-
-        <hr style={{ color: "gray" }} />
       </Container>
     </section>
   );

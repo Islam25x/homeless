@@ -32,7 +32,7 @@ const LogedHeader: React.FC = () => {
   };
 
   return (
-    <header id="LogedHeader">
+    <header id="LogedHeader" data-aos="fade-down">
       <Navbar expand="lg" className="sticky-top">
         <Container fluid className="ms-1 me-1">
 

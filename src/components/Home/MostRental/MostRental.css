@@ -1,3 +1,8 @@
+#MostRental{
+    background-color: white;
+    height: 80vh;
+}
+
 #MostRental .MostRental-top .MostRental-des , #ManageProperty .ManageProperty-top .ManageProperty-des{
     color: gray;
     font-size: 1.2rem;

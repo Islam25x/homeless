@@ -15,8 +15,8 @@ function Home() {
             {userRole === '' ?  <MainHeader />:<LogedHeader /> } 
             <Main />
             <ExploreRentals />
-            <MostRental />
-            <ManageProperty />
+            {/* <MostRental />
+            <ManageProperty /> */}
             <Footer />
         </>
     );
