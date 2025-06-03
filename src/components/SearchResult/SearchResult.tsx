@@ -30,7 +30,7 @@ function SearchResult() {
         (p) => p.propertyApproval === "accepted"
     );
 
-    const userRole = localStorage.getItem("userRole");
+    const userRole = localStorage.getItem("userRole") || '';
 
     return (
         <>
@@ -53,7 +53,7 @@ function SearchResult() {
                         {filteredProperties?.map((property) => (
                             <Col key={property.id} lg={3} md={6} sm={12}>
                                 <Link
-                                    to={`/RentalsDetails/${property.id}`}
+                                    to={userRole === "" ? "/Login" : `/RentalsDetails/${property.id}`}
                                     className="text-decoration-none text-dark"
                                 >
                                     <Card>

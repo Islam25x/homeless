@@ -3,6 +3,7 @@ import AdminNav from "../Headers/AdminNav/AdminNav";
 import DashboardTop from "./DashboardTop/DashboardTop";
 import LandlordPending from "./LandlordPending/LandlordPending";
 import Posts from "./Posts/Posts";
+import LineChart from "./LineChart";
 
 function Dashboard() {
   const [activeComponent, setActiveComponent] = useState<string>("welcome");
@@ -14,15 +15,20 @@ function Dashboard() {
       case "posts":
         return <Posts />;
       default:
-        return <p className="text-center my-5">Welcome to the Dashboard!</p>;
+        return (
+          <div className="LineChart">
+            <LineChart />
+          </div>
+
+        );
     }
   };
 
   return (
     <section id='Admin'>
       <div className="Dashboard d-flex">
-        <AdminNav  activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
-        <div className="Dashboard-ctn" style={{ width: '100%'}}>
+        <AdminNav activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
+        <div className="Dashboard-ctn" style={{ width: '100%' , height:'100vh' }}>
           <DashboardTop />
           {renderActiveComponent()}
         </div>

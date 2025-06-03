@@ -16,4 +16,5 @@ export type MyProperty = {
     landlordName: string;
     landlordImage: string | null;
     tenantName: string;
+    views:number
 };

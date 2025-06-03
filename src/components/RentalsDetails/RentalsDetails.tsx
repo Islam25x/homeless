@@ -117,7 +117,7 @@ function RentalsDetails() {
 
   const handleSave = async () => {
     try {
-      await savePost({ tenantId: Number(userId), propertyId: property.id }).unwrap();
+      await savePost({ tenantId: Number(userId), propertyId: property?.id }).unwrap();
       refetch();
       setIsSaved(!isSaved);
     } catch (err) {
@@ -186,7 +186,7 @@ function RentalsDetails() {
   const handleDeleteProperty = async () => {
     try {
       await deleteProperty(
-        { propertyId: property.id }
+        { propertyId: property?.id }
       ).unwrap();
       refetch();
       toast.success('Property deleted successfully!');
@@ -198,10 +198,10 @@ function RentalsDetails() {
   // show Edit property Modal
   const openEditModal = () => {
     setFormState({
-      title: property.title || '',
-      price: property.price?.toString() || '',
-      description: property.description || '',
-      location: property.location || '',
+      title: property?.title || '',
+      price: property?.price?.toString() || '',
+      description: property?.description || '',
+      location: property?.location || '',
     });
     setShowEditModal(true);
   };
@@ -233,7 +233,7 @@ function RentalsDetails() {
     try {
       await SendMessage({
         userID: Number(userId),
-        receiverId: Number(property.landlordId),
+        receiverId: Number(property?.landlordId),
         message: messageContent,
       });
 

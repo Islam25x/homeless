@@ -37,7 +37,7 @@ const decodeToken = (token: string): DecodedToken => {
   return JSON.parse(jsonPayload);
 };
 
-const Login = () => {
+const LoginModal = () => {
   const [formData, setFormData] = useState<FormData>({ name: "", password: "" });
   const [errors, setErrors] = useState<Errors>({});
   const [login, { isLoading }] = useLoginMutation();
@@ -101,7 +101,7 @@ const Login = () => {
   };
 
   return (
-    <section id="Login">
+    <section id="LoginModal">
       <Container>
         <div className="sign-header text-center">
           <h2>Sign into your account</h2>
@@ -154,4 +154,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginModal;

@@ -5,7 +5,7 @@ interface PropertyImage {
 
 export interface RentalDetails {
     description: string;
-    landlordId: number;
+    landlordId: number | undefined;
     landlordImage: string | null;
     landlordName: string;
     location: string;
@@ -26,5 +26,5 @@ export interface RentalDetails {
     isAskForRent?: boolean;
     mainImage: string; // for UI logic (same as propertyMainImage)
     createAt: string; // same as requestCreateAt, but named differently in some responses
-    id: number; // same as propertyId, for component access
+    id: number | undefined; // same as propertyId, for component access
 }

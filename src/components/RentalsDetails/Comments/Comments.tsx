@@ -4,7 +4,7 @@ import { getImageSrc } from '../../../utils/imageHelpers';
 import './Comments.css';
 
 interface CommentsProps {
-  propertyId: number;
+  propertyId: number | undefined;
 }
 
 function Comments({ propertyId }: CommentsProps) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSpring, animated } from '@react-spring/web'
 import { useGetUserStatisticsQuery } from '../../RTK/UserApi/UserApi';
 import { Col, Container, Row } from "react-bootstrap";
+import { Link } from 'react-router-dom';
 import PropertySearch from "./PropertySearch/PropertySearch";
 import "./HomeTop.css";
 
@@ -38,7 +39,9 @@ const HomeTop = () => {
             <div className="home-ctn">
               <h1>Find A House That Suit You</h1>
               <p>Want to find a home? We are ready to help you find one that suits your lifestyle and needs</p>
-              <button>Get Started</button>
+              <Link to='Login'>
+                <button>Get Started</button>
+              </Link>
               {startAnimation && data && (
                 <Row className="stats mt-5">
                   <Col>

@@ -68,7 +68,7 @@ const ExploreRentals: React.FC = () => {
               <Col key={property.id} lg={3} md={6} sm={12}
                 data-aos="fade-up"
                 data-aos-duration="1000">
-                <Link to={`/RentalsDetails/${property.id}`}>
+                <Link to={userRole === "" ? "/Login" :`/RentalsDetails/${property.id}`}>
                   <Card className="card mt-4">
                     <Card.Img
                       variant="top"
@@ -84,7 +84,27 @@ const ExploreRentals: React.FC = () => {
                         <FontAwesomeIcon className="mt-1" icon={faMapMarkerAlt} />
                         <Card.Text>{property.location}</Card.Text>
                       </div>
-                      <Card.Title>{property.title}</Card.Title>
+                      <div className="d-flex justify-content-between mb-2">
+                        <div className=" d-flex align-items-center location-view">
+                          <i className="fas fa-eye text-primary me-2"></i>
+                          <span>{property.views || 0} Views</span>
+                        </div>
+                        <div className="d-flex align-items-center location-view">
+                          <img
+                            src={property.landlordImage ? getImageSrc(property.landlordImage) : 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg'}
+                            alt="Landlord"
+                            style={{
+                              width: '20px',
+                              height: '20px',
+                              borderRadius: '50%',
+                              objectFit: 'cover',
+                              marginRight: '10px',
+                            }}
+                          />
+                          <span>{property.landlordName || 'Unknown Landlord'}</span>
+                        </div>
+                      </div>
+                      {/* <Card.Title>{property.title}</Card.Title> */}
                       <Card.Text>Price: ${property.price}</Card.Text>
                     </Card.Body>
                   </Card>

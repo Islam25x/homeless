@@ -1,9 +1,8 @@
 import { useState } from "react";
 import React from "react";
 import { Container, Nav, Navbar, Button, Modal } from "react-bootstrap";
-import Login from "../../LoginSystem/Login/Login";
-import SignUp from "../../LoginSystem/SignUp/SignUp";
-
+import LoginModal from "../../AuthModal/LoginModal/LoginModal";
+import RegisterModal from "../../AuthModal/RegisterModal/RegisterModal";
 import './MainHeader.css'
 
 const MainHeader: React.FC = () => {
@@ -81,8 +80,8 @@ const MainHeader: React.FC = () => {
           <Modal.Title>{modalType}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {modalType === "Sign In" && <Login />}
-          {modalType === "Register" && <SignUp />}
+          {modalType === "Sign In" && <LoginModal />}
+          {modalType === "Register" && <RegisterModal />}
         </Modal.Body>
       </Modal>
     </header>

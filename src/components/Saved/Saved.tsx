@@ -2,51 +2,19 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useGetSavedPostsQuery } from "../RTK/SaveSlice/SaveApi";
 import LogedHeader from "../Headers/LogedHeader/LogedHeader";
+import { getImageSrc } from "../../utils/imageHelpers";
 import { useEffect } from "react";
-
-const base64ToBlob = (base64: string, mimeType: string) => {
-    const byteString = atob(base64.split(",")[1]);
-    const byteArray = new Uint8Array(byteString.length);
-
-    for (let i = 0; i < byteString.length; i++) {
-        byteArray[i] = byteString.charCodeAt(i);
-    }
-
-    return new Blob([byteArray], { type: mimeType });
-};
-
-// وظيفة لعرض الصورة بناءً على كونها مشفرة بـ Base64 أو رابط URL أو فارغة
-const getImageSrc = (image?: string) => {
-    if (!image) {
-        return "/default-image.png"; // رابط لصورة افتراضية داخل public folder
-    }
-    if (image.startsWith("data:image")) {
-        const blob = base64ToBlob(image, "image/png");
-        return URL.createObjectURL(blob);
-    }
-    // في حال كانت Base64 بدون الهيدر المناسب
-    if (image.length > 100 && !image.startsWith("http")) {
-        return `data:image/png;base64,${image}`;
-    }
-    return image;
-};
-
-interface Property {
-    id: number;
-    title: string;
-    description: string;
-    mainImage: string;
-    price: number;
-    propertyApproval: string
-    location: string
-}
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 function Saved() {
     const userId = JSON.parse(localStorage.getItem('userId') || '{}');
-    const { data: SavedPosts = [], isLoading, error , refetch  } = useGetSavedPostsQuery({ tenantId: userId });
+    const { data, isLoading, error, refetch } = useGetSavedPostsQuery({ tenantId: userId });
 
     useEffect(() => {
         refetch();
     }, []);
+
+    const SavedPosts = data?.filter((SavedPost)=> SavedPost.status !== 'rented')
 
     return (
         <section id='Saved'>
@@ -58,9 +26,9 @@ function Saved() {
                         <p className="text-center">Loading...</p>
                     ) : error ? (
                         <p className="text-center text-danger">Error loading properties.</p>
-                    ) : SavedPosts.length === 0 ? (
+                    ) : SavedPosts?.length === 0 ? (
                         <p className="text-center">No properties found.</p>
-                    ) : (SavedPosts.map((property: Property) => (
+                    ) : (SavedPosts?.map((property) => (
                         <Col key={property.id} lg={3} md={6} sm={12}>
                             <Link to={`/RentalsDetails/${property.id}`}>
                                 <Card className="card mt-4">
@@ -72,9 +40,31 @@ function Saved() {
                                             (e.target as HTMLImageElement).src = "/default-image.png";
                                         }}
                                     />
-                                    <Card.Body className="text-center">
-                                        <Card.Title>{property.title}</Card.Title>
-                                        <Card.Text>{property.location}</Card.Text>
+                                    <Card.Body className="align-items-center mt-2 mx-2">
+                                        <div className="d-flex mb-2">
+                                            <FontAwesomeIcon className="mt-1 me-1" icon={faMapMarkerAlt} />
+                                            <Card.Text>{property.location}</Card.Text>
+                                        </div>
+                                        <div className="d-flex justify-content-between mb-2">
+                                            <div className=" d-flex align-items-center location-view">
+                                                <i className="fas fa-eye text-primary me-2"></i>
+                                                <span>{property.views || 0} Views</span>
+                                            </div>
+                                            <div className="d-flex align-items-center location-view">
+                                                <img
+                                                    src={property.landlordImage ? getImageSrc(property.landlordImage) : 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg'}
+                                                    alt="Landlord"
+                                                    style={{
+                                                        width: '20px',
+                                                        height: '20px',
+                                                        borderRadius: '50%',
+                                                        objectFit: 'cover',
+                                                        marginRight: '10px',
+                                                    }}
+                                                />
+                                                <span>{property.landlordName || 'Unknown Landlord'}</span>
+                                            </div>
+                                        </div>
                                         <Card.Text>Price: ${property.price}</Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -83,7 +73,6 @@ function Saved() {
                     ))
                     )}
                 </Row>
-                <hr style={{ color: "gray" }} />
             </Container>
         </section>
     )

@@ -1,0 +1,60 @@
+#Login , #SignUp{
+  height: 100vh;
+  background-image: url("/public/images/auth.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  align-content: center;
+  color: white;
+}
+#SignUp .sign-header h2 , #RegisterModal .sign-header h2{
+  font-size: 30px;
+}
+#SignUp .sign-header a, #RegisterModal .sign-header a {
+  text-decoration: none;
+  color: #077eb1;
+}
+#SignUp form .form-top input, #RegisterModal form .form-top input,
+#Login form .form-top input , #LoginModal form .form-top input {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.4rem;
+  border: 1px solid rgb(207, 204, 204);
+}
+#SignUp select , #RegisterModal select {
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+  border-color: #22272c;
+  padding: 1rem 3rem 1rem 1rem;
+  color: black;
+}
+#SignUp select:focus , #RegisterModal select:focus{
+  background-color: white;
+  color: black;
+}
+#SignUp form .form-bottom p, #RegisterModal form .form-bottom p,
+#Login form .form-bottom p ,#LoginModal form .form-bottom p {
+  font-size: 14px;
+  color: rgb(103, 102, 102);
+}
+#SignUp form .form-bottom input , #RegisterModal form .form-bottom input{
+  height: 1.6rem;
+  width: 1.3rem;
+  margin-right: 0.5rem;
+}
+#SignUp button, #RegisterModal button,
+#Login button , #LoginModal button {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #01547b;
+  border: none;
+  color: white;
+  transition: .3s;
+}
+#SignUp button:hover,#RegisterModal button:hover,
+#Login button:hover , #LoginModal button:hover {
+background-color: #0089c8;
+}

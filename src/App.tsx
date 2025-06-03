@@ -6,8 +6,8 @@ import { ToastContainer } from "react-toastify";
 import { useLogoutMutation } from './components/RTK/Auth/AuthApi';
 // Comps 
 import Home from "./components/Home/Home";
-import Login from "./components/LoginSystem/Login/Login";
-import SignUp from "./components/LoginSystem/SignUp/SignUp";
+import Login from './components/AuthSystem/Login/Login';
+import Register from './components/AuthSystem/Register/Register';
 import Account from "./components/Account/Account";
 import AddProperties from "./components/AddProperties/AddProperties";
 import Chat from "./components/Chat/Chat";
@@ -65,7 +65,7 @@ const App: React.FC = () => {
         localStorage.clear();
         navigate('/');
       }
-    }, 10000);
+    }, 100002343242);
 
     return () => clearInterval(intervalId); // تنظيف الـ interval عند الخروج
   }, [refresh, logout, navigate]);
@@ -81,7 +81,7 @@ const App: React.FC = () => {
           <>
             <Route path="/" element={<Home />} />
             <Route path="/Login" element={<Login />} />
-            <Route path="/SignUp" element={<SignUp />} />
+            <Route path="/Register" element={<Register />} />
             {userRole === 'landlord' || userRole === 'tenant' ? (
               <Route path="/Account" element={<Account />} />
             ) : ''}

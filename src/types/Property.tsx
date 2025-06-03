@@ -10,6 +10,7 @@ export interface Property {
     mainImage: string;
     price: number;
     status: string;
+    views:number;
     propertyApproval: 'pending' | 'accepted' | 'rejected';
     propertyImages: {
         image: string;

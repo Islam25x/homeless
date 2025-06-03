@@ -11,6 +11,9 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import PendingRentals from "../PendingRentals/PendingRentals";
 import LogedHeader from "../Headers/LogedHeader/LogedHeader";
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Card} from "react-bootstrap";
 
 function MyProperties() {
     const userId = localStorage.getItem("userId") || "";
@@ -62,11 +65,33 @@ function MyProperties() {
                                                 alt={property.propertyTitle}
                                                 className="post-image"
                                             />
-                                            <div className="text-center mt-2">
-                                                <h5>{property.propertyTitle}</h5>
-                                                <p>{property.location}</p>
-                                                <p>Price: ${property.price}</p>
-                                            </div>
+                                            <Card.Body className="align-items-center mt-2 mx-2">
+                                                <div className="d-flex mb-2">
+                                                    <FontAwesomeIcon className="mt-1 me-1" icon={faMapMarkerAlt} />
+                                                    <Card.Text>{property.location}</Card.Text>
+                                                </div>
+                                                <div className="d-flex justify-content-between mb-2">
+                                                    <div className=" d-flex align-items-center location-view">
+                                                        <i className="fas fa-eye text-primary me-2"></i>
+                                                        <span>{property.views || 0} Views</span>
+                                                    </div>
+                                                    <div className="d-flex align-items-center location-view">
+                                                        <img
+                                                            src={property.landlordImage ? getImageSrc(property.landlordImage) : 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg'}
+                                                            alt="Landlord"
+                                                            style={{
+                                                                width: '20px',
+                                                                height: '20px',
+                                                                borderRadius: '50%',
+                                                                objectFit: 'cover',
+                                                                marginRight: '10px',
+                                                            }}
+                                                        />
+                                                        <span>{property.landlordName || 'Unknown Landlord'}</span>
+                                                    </div>
+                                                </div>
+                                                <Card.Text>Price: ${property.price}</Card.Text>
+                                            </Card.Body>
                                         </div>
                                     </Link>
                                 </SwiperSlide>

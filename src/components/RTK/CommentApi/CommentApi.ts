@@ -13,10 +13,10 @@ export const CommentSlice = createApi({
     reducerPath: 'Comment',
     baseQuery: baseQuery,
     endpoints: (builder) => ({
-        getComments: builder.query<Comment[], { PropertyId: number }>({
+        getComments: builder.query<Comment[], { PropertyId: number | undefined }>({
             query: ({ PropertyId }) => `RentMate/Comment/${PropertyId}`,
         }),
-        AddComment: builder.mutation<any, { userId: number, propertyId: number, content: string | undefined }>({
+        AddComment: builder.mutation<any, { userId: number, propertyId: number | undefined , content: string | undefined }>({
             query: ({ userId, propertyId, content }) => ({
                 url: 'RentMate/Comment',
                 method: 'POST',

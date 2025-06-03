@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '../baseQueryWithAuth ';
+import { RentalDetails } from '../../../types/PropertyDetails';
 
 export const PropertySlice = createApi({
     reducerPath: 'Property',
@@ -8,7 +9,7 @@ export const PropertySlice = createApi({
         getProperties: builder.query<any, void>({
             query: () => 'RentMate/Property',
         }),
-        getPropertyById: builder.query<any, { PropertyId: number; userId: number }>({
+        getPropertyById: builder.query<RentalDetails, { PropertyId: number; userId: number }>({
             query: ({ PropertyId, userId }) => `RentMate/Property/${PropertyId}?userId=${userId}`,
         }),
         AddProperties: builder.mutation<any, FormData>({
@@ -32,7 +33,7 @@ export const PropertySlice = createApi({
                 body: formData,
             }),
         }),
-        DeleteProperty: builder.mutation<void, { propertyId: number }>({
+        DeleteProperty: builder.mutation<void, { propertyId: number | undefined }>({
             query: ({ propertyId }) => ({
                 url: `/RentMate/Property/Delete/${propertyId}`,
                 method: 'DELETE',

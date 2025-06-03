@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import { useRegisterMutation } from "../../RTK/Auth/AuthApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../LoginSystem.css";
 
 interface FormData {
   username: string;
@@ -30,7 +29,7 @@ const decodeToken = (token: string): DecodedToken => {
   return decoded;
 };
 
-const SignUp = () => {
+const Register = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
     email: "",
@@ -56,10 +55,10 @@ const SignUp = () => {
   };
 
   const navigate = useNavigate()
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const userData = {
       name: formData.username,
       email: formData.email,
@@ -67,21 +66,21 @@ const SignUp = () => {
       role: formData.Role,
       isProfessional: formData.isProfessional,
     };
-  
+
     try {
       const response = await register({ userDto: userData, role: formData.Role }).unwrap();
-  
+
       // تحقق مما إذا كانت الاستجابة تحتوي على token (أي Tenant)
       if ("token" in response) {
         const token = response.token;
         const refreshToken = response.refreshToken;
-  
+
         const decoded = decodeToken(token);
         const role =
           decoded[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
           ];
-  
+
         localStorage.setItem("token", token);
         if (refreshToken) {
           localStorage.setItem("refreshToken", refreshToken);
@@ -89,7 +88,7 @@ const SignUp = () => {
         localStorage.setItem("user", JSON.stringify(decoded));
         localStorage.setItem("userRole", role);
         localStorage.setItem("userId", decoded.sub);
-  
+
         toast.success("Signed up successfully");
         navigate("/");
       } else {
@@ -102,7 +101,7 @@ const SignUp = () => {
       // toast.error("Registration failed. Please try again.");
     }
   };
-  
+
 
 
   // Safe error casting
@@ -173,7 +172,7 @@ const SignUp = () => {
           </div>
 
           <div className="form-bottom">
-            <p>
+            <p className="text-light">
               Message and data rates may apply. By submitting your phone number,
               you consent to being contacted by
               <span style={{ color: "#0f8ac0" }}>TheHomeless.org</span>
@@ -191,8 +190,10 @@ const SignUp = () => {
                 I am an industry professional
               </label>
             </div>
-
-            <button type="submit" disabled={isLoading}>
+            <div>
+              have account?<Link className="ms-2" to='/Login'>Login</Link>
+            </div>
+            <button className="mt-2" type="submit" disabled={isLoading}>
               {isLoading ? "Signing Up..." : "Sign Up"}
             </button>
 
@@ -204,4 +205,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Register;
