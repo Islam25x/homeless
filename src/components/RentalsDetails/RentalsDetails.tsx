@@ -14,12 +14,10 @@ import { useSendMessageMutation } from '../RTK/ChatApi/ChatApi';
 import useSignalR from '../Chat/useSignalR';
 import { useGetChatContentQuery } from '../RTK/ChatApi/ChatApi';
 import { ChatMessage } from '../../types/ChatMessage';
+import { BeatLoader } from 'react-spinners';
 import './RentalsDetails.css';
 
-interface propertyImages {
-  propertyImageId: number;
-  image: string;
-}
+
 
 function RentalsDetails() {
   const { id } = useParams<{ id: string }>();
@@ -275,7 +273,15 @@ function RentalsDetails() {
   const [SendMessage] = useSendMessageMutation()
   const [addPropertyAlbumImage] = useAddPropertyAlbumImageMutation();
 
-  if (isLoading) return <p className="text-center mt-5">Loading...</p>;
+  if (isLoading) return (
+    <div className="loading">
+      <BeatLoader
+        className='BeatLoader'
+        color="#0a81ed"
+        size={50}
+      />
+    </div>
+  )
   if (error || !property) return <p className="text-center mt-5 text-danger">You have to login</p>;
 
   return (
@@ -288,7 +294,7 @@ function RentalsDetails() {
           {/* property imgs  */}
           <Col lg={2} md={2} sm={4}>
             <div className="d-flex flex-column gap-2">
-              {property.propertyImages.map((propertyImage: propertyImages, index: number) => (
+              {property.propertyImages.map((propertyImage, index: number) => (
                 <div className="border p-1 position-relative" key={`${propertyImage.propertyImageId}-${index}`}>
                   {
                     userRole === 'landlord' && property.status === 'available' && Number(userId) === Number(property.landlordId) && (

@@ -1,13 +1,12 @@
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { Container, Row, Col, Card, } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import { useSearchPropertiesQuery } from "../RTK/Search/SearchApi";
 import LogedHeader from "../Headers/LogedHeader/LogedHeader";
 import MainHeader from "../Headers/MainHeader/MainHeader";
 import { Link } from "react-router-dom";
 import { getImageSrc } from "../../utils/imageHelpers";
-import { useState, useEffect } from "react";
+import { BeatLoader } from "react-spinners";
 import "./SearchResult.css";
-
 function SearchResult() {
     // 1️⃣ نقرأ القيم من الـ URL
     const { location, from, to } = useParams<{
@@ -15,8 +14,6 @@ function SearchResult() {
         from?: string;
         to?: string;
     }>();
-
-    const navigate = useNavigate();
 
 
     // 4️⃣ استدعاء الـ API
@@ -31,6 +28,15 @@ function SearchResult() {
     );
 
     const userRole = localStorage.getItem("userRole") || '';
+    if (isLoading) return (
+        <div className="loading">
+            <BeatLoader
+                className='BeatLoader'
+                color="#0a81ed"
+                size={50}
+            />
+        </div>
+    )
 
     return (
         <>

@@ -72,3 +72,9 @@
 .location-view .icon {
   margin-right: 8px;
 }
+.loading .BeatLoader {
+  height: 100vh;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
