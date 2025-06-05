@@ -14,7 +14,7 @@ const PropertySearch = () => {
     const handleSearchSubmit = (e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        const safeLocation = location.trim() || "any"; // لو الموقع فارغ
+        const safeLocation = location.trim() || "any";
         const safeFrom = fromPrice.trim() || "0";
         const safeTo = toPrice.trim() || "9999999";
 

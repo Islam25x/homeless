@@ -72,7 +72,7 @@ const RegisterModal = () => {
       const response = await register({ userDto: userData, role: formData.Role }).unwrap();
   
       // تحقق مما إذا كانت الاستجابة تحتوي على token (أي Tenant)
-      if ("token" in response) {
+      if (response && "token" in response) {
         const token = response.token;
         const refreshToken = response.refreshToken;
   
@@ -92,14 +92,14 @@ const RegisterModal = () => {
   
         toast.success("Signed up successfully");
         navigate("/");
-      } else {
-        // الدور ليس Tenant
+        window.location.reload()
+      } else{
         toast.success("Registered successfully. Please wait for approval.");
         navigate("/");
       }
     } catch (err) {
       console.error("Signup error:", err);
-      // toast.error("Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.");
     }
   };
   

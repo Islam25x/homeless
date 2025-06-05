@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 import { useLoginMutation } from "../../RTK/Auth/AuthApi";
 import { useNavigate , Link} from "react-router-dom";
 
-// أنواع البيانات
+
 interface FormData {
   name: string;
   password: string;

@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '../baseQueryWithAuth ';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
 interface PropertyDto {
     id: number;
@@ -19,7 +19,7 @@ interface PropertyDto {
 
 export const SearchApi = createApi({
     reducerPath: 'Search',
-    baseQuery: baseQuery,
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         searchProperties: builder.query<PropertyDto[], { location?: string; fromPrice?: number; toPrice?: number }>({
             query: ({ location, fromPrice, toPrice }) => {

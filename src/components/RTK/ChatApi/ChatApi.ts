@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '../baseQueryWithAuth ';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
 // Define types for the response data
 interface User {
@@ -19,7 +19,7 @@ interface ChatMessage {
 
 export const ChatApi = createApi({
     reducerPath: 'ChatApi',
-    baseQuery: baseQuery,
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         getusersChat: builder.query<User[], { userID: number }>({
             query: ({ userID }) => `RentMate/Message/MyChats/${userID}`,

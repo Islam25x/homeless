@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useSpring, animated } from '@react-spring/web'
 import { useGetUserStatisticsQuery } from '../../RTK/UserApi/UserApi';
 import { Col, Container, Row } from "react-bootstrap";
@@ -18,19 +17,7 @@ const Number: React.FC<{ n: number }> = ({ n }) => {
   return <animated.div>{number.to((n) => n.toFixed(0))}</animated.div>;
 };
 const HomeTop = () => {
-  const [startAnimation, setStartAnimation] = useState(false);
   const { data } = useGetUserStatisticsQuery()
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY < 1000) {
-        setStartAnimation(true);
-      } else {
-        setStartAnimation(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
   return (
     <main>
       <Container fluid>
@@ -42,7 +29,7 @@ const HomeTop = () => {
               <Link to='Login'>
                 <button>Get Started</button>
               </Link>
-              {startAnimation && data && (
+              {data && (
                 <Row className="stats mt-5">
                   <Col>
                     <Number n={data.numberOfUsers} />

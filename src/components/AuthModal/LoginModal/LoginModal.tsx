@@ -89,6 +89,7 @@ const LoginModal = () => {
         localStorage.setItem("userId", decoded.sub);
 
         navigate("/");
+        window.location.reload()
       } else {
         setErrors({ backendError: "Token not received from server." });
       }

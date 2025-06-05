@@ -1,9 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '../baseQueryWithAuth ';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
 export const AdminApi = createApi({
     reducerPath: 'Admin',
-    baseQuery: baseQuery,
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         getDashBoard: builder.query<any, void>({
             query: () => 'RentMate/Admin/DashBoard',

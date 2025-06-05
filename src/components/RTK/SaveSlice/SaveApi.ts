@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '../baseQueryWithAuth ';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
 interface Property {
     id: number;
@@ -17,7 +17,7 @@ interface Property {
 
 export const SaveApi = createApi({
     reducerPath: 'SaveApi',
-    baseQuery: baseQuery,
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         getSavedPosts: builder.query<Property[], { tenantId: number }>({
             query: ({ tenantId }) => `RentMate/Save/Posts/${tenantId}`,

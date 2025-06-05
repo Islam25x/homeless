@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '../baseQueryWithAuth ';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 interface DashboardStats {
     numberOfUsers: number;
     numberOfTenants: number;
@@ -9,7 +9,7 @@ interface DashboardStats {
 
 export const UserApi = createApi({
     reducerPath: 'UserApi',
-    baseQuery: baseQuery,
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         getUserPhoto: builder.query<any, { id: number }>({
             query: ({ id }) => `RentMate/User/${id}/image`,

@@ -1,9 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '../baseQueryWithAuth ';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
 export const PropertyRequestApi = createApi({
     reducerPath: 'PropertyRequestRequest',
-    baseQuery: baseQuery,
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         RentProperty: builder.mutation<any, { FormData: FormData; TenantId: number; PropertyId: number }>({
             query: ({ FormData, TenantId, PropertyId }) => ({

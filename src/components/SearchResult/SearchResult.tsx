@@ -8,7 +8,7 @@ import { getImageSrc } from "../../utils/imageHelpers";
 import { BeatLoader } from "react-spinners";
 import "./SearchResult.css";
 function SearchResult() {
-    // 1️⃣ نقرأ القيم من الـ URL
+    
     const { location, from, to } = useParams<{
         location?: string;
         from?: string;
@@ -16,7 +16,6 @@ function SearchResult() {
     }>();
 
 
-    // 4️⃣ استدعاء الـ API
     const { data: properties, isLoading, error } = useSearchPropertiesQuery({
         location: location === "any" ? undefined : location,
         fromPrice: Number(from),

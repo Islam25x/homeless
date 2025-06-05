@@ -28,7 +28,7 @@ const LogedHeader: React.FC = () => {
 
     // إعادة التوجيه
     navigate("/");
-    // window.location.reload();
+    window.location.reload();
   };
 
   return (

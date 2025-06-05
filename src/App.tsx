@@ -1,9 +1,5 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useRefreshMutation } from "./components/RTK/Auth/AuthApi";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { useLogoutMutation } from './components/RTK/Auth/AuthApi';
 // Comps 
 import Home from "./components/Home/Home";
 import Login from './components/AuthSystem/Login/Login';
@@ -21,54 +17,6 @@ import "./App.css";
 
 const App: React.FC = () => {
   const userRole: string = localStorage.getItem('userRole') || '';
-  const [refresh] = useRefreshMutation();
-  const [logout] = useLogoutMutation();
-  const navigate = useNavigate();
-
-  
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const refreshToken = localStorage.getItem('refreshToken');
-      const userId = localStorage.getItem('userId') || '';  
-
-      if (refreshToken) {
-        refresh({ refreshToken,  userId: Number(userId) })
-          .then((res: any) => {
-            console.log("Refresh response:", res);
-
-            if (res?.data?.token) {
-              const { token, refreshToken: newRefreshToken, role } = res.data;
-
-              localStorage.setItem('token', token);
-              if (newRefreshToken) localStorage.setItem('refreshToken', newRefreshToken);
-              if (role) localStorage.setItem('userRole', role);
-
-              console.log('Tokens refreshed successfully');
-            } else {
-              console.error("Unexpected refresh structure:", res);
-              throw new Error("Invalid refresh response");
-            }
-          })
-          .catch(async (err) => {
-            console.error('Failed to refresh token', err);
-
-            try {
-              await logout().unwrap();
-            } catch (logoutErr) {
-              console.error("Logout failed on backend", logoutErr);
-            }
-
-            localStorage.clear();
-            navigate('/');
-          });
-      } else {
-        localStorage.clear();
-        navigate('/');
-      }
-    }, 100002343242);
-
-    return () => clearInterval(intervalId); // تنظيف الـ interval عند الخروج
-  }, [refresh, logout, navigate]);
   return (
     <>
       <Routes>

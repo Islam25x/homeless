@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '../baseQueryWithAuth ';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
 interface NewUserDto {
     name: string;
@@ -18,7 +18,7 @@ interface AuthModelDto {
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: baseQuery,
+    baseQuery: baseQueryWithReauth ,
     endpoints: (builder) => ({
         getLandlordPending: builder.query<any, void>({
             query: () => 'RentMate/Auth/LandlordsRequests',

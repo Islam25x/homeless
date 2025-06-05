@@ -29,7 +29,7 @@ function AdminNav({ setActiveComponent, activeComponent }: AdminNavProps) {
 
     // إعادة التوجيه
     navigate("/");
-    // window.location.reload();
+    window.location.reload();
   };
   return (
     <aside className="sidebar">

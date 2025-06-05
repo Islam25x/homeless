@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '../baseQueryWithAuth ';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 interface Comment {
     commentContent: string;
     createAt: string;
@@ -11,7 +11,7 @@ interface Comment {
 
 export const CommentSlice = createApi({
     reducerPath: 'Comment',
-    baseQuery: baseQuery,
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         getComments: builder.query<Comment[], { PropertyId: number | undefined }>({
             query: ({ PropertyId }) => `RentMate/Comment/${PropertyId}`,
