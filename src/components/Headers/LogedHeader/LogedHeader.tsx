@@ -2,13 +2,18 @@ import React from "react";
 import { Container, NavDropdown, Navbar, Nav } from "react-bootstrap";
 import { useLogoutMutation } from "../../RTK/Auth/AuthApi";
 import { Link, useNavigate } from "react-router-dom";
+import { getImageSrc } from "../../../utils/imageHelpers";
+import { useGetUserPhotoQuery } from "../../RTK/UserApi/UserApi";
 import "./LogedHeader.css";
 
 const LogedHeader: React.FC = () => {
 
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
-
+  const userId = localStorage.getItem('userId') || '';
+  const { data: profileImage } = useGetUserPhotoQuery({
+    id: Number(userId)
+  })
 
   const userRole: any = localStorage.getItem('userRole') || '';
   // Logout function
@@ -56,9 +61,23 @@ const LogedHeader: React.FC = () => {
               </Link>
 
               {/* Profile Icon */}
-              <div className="profile-photo">
-                <i className="def-user fa-regular fa-user"></i>
-              </div>
+              {
+                profileImage?.image ?
+                  <img
+                    src={getImageSrc(profileImage.image)}
+                    alt="Landlord"
+                    style={{
+                      width: '34px',
+                      height: '34px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      marginRight: '10px',
+                    }}
+                  /> :
+                  <div className="profile-photo">
+                    <i className="def-user fa-regular fa-user"></i>
+                  </div>
+              }
 
               {/* Dropdown Menu */}
               <NavDropdown
@@ -88,7 +107,7 @@ const LogedHeader: React.FC = () => {
                   userRole === 'tenant' && (
                     <NavDropdown.Item as={Link} to="/savedProperties" className="d-flex">
                       <i className="fa-solid fa-bookmark me-3 mt-1 align-content-center"></i>
-                      <span  className="mt-1">My collection</span>
+                      <span className="mt-1">My collection</span>
                     </NavDropdown.Item>
                   )
                 }
