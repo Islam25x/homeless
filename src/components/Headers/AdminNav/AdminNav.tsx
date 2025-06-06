@@ -15,7 +15,7 @@ function AdminNav({ setActiveComponent, activeComponent }: AdminNavProps) {
 
   const handleLogout = async () => {
     try {
-      await logout().unwrap(); // إرسال طلب logout إلى الباك
+      await logout().unwrap(); 
     } catch (error) {
       console.error("Logout failed on backend", error);
     }

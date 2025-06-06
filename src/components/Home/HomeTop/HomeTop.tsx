@@ -16,6 +16,7 @@ const Number: React.FC<{ n: number }> = ({ n }) => {
 
   return <animated.div>{number.to((n) => n.toFixed(0))}</animated.div>;
 };
+const userRole: string = localStorage.getItem('userRole') || '';
 const HomeTop = () => {
   const { data } = useGetUserStatisticsQuery()
   return (
@@ -26,9 +27,11 @@ const HomeTop = () => {
             <div className="home-ctn">
               <h1>Find A House That Suit You</h1>
               <p>Want to find a home? We are ready to help you find one that suits your lifestyle and needs</p>
-              <Link to='Login'>
-                <button>Get Started</button>
-              </Link>
+              {
+                userRole === '' && <Link to='Login'>
+                  <button>Get Started</button>
+                </Link>
+              }
               {data && (
                 <Row className="stats mt-5">
                   <Col>

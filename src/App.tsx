@@ -12,7 +12,6 @@ import Admin from "./components/Admin/Dashboard";
 import SearchResult from "./components/SearchResult/SearchResult";
 import Saved from "./components/Saved/Saved";
 import MyProperties from './components/MyProperties/MyProperties';
-
 import "./App.css";
 
 const App: React.FC = () => {

@@ -20,7 +20,8 @@ main .home-ctn h1 {
   font-size: 4rem;
 }
 main .home-ctn button,
-.property-search-container button {
+.property-search-container button,
+.History-btn {
   color: white;
   background-color: black;
   margin-top: 1rem;
@@ -29,8 +30,12 @@ main .home-ctn button,
   border: none;
   transition: 0.3s;
 }
-main .home-ctn button:hover ,
-.property-search-container button:hover {
+.History-btn {
+  padding: 0.5rem 2rem;
+}
+main .home-ctn button:hover,
+.property-search-container button:hover,
+.History-btn:hover {
   background-color: #c1d2da;
   color: black;
 }

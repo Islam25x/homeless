@@ -1,0 +1,13 @@
+.history-table td,
+.history-table th {
+  vertical-align: middle;
+  text-align: center;
+}
+
+@media (max-width: 576px) {
+  .history-table td,
+  .history-table th {
+    font-size: 14px;
+    padding: 8px;
+  }
+}

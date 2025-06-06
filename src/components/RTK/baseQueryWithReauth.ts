@@ -70,7 +70,6 @@ export const baseQueryWithReauth: BaseQueryFn<
                 {
                     url: 'RentMate/Auth/logout',
                     method: 'POST',
-                    body: { refreshToken, userId: Number(userId) },
                 },
                 api,
                 extraOptions

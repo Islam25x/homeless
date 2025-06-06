@@ -35,13 +35,13 @@ export const PropertySlice = createApi({
         }),
         DeleteProperty: builder.mutation<void, { propertyId: number | undefined }>({
             query: ({ propertyId }) => ({
-                url: `/RentMate/Property/Delete/${propertyId}`,
+                url: `RentMate/Property/Delete/${propertyId}`,
                 method: 'DELETE',
             }),
         }),
         DeletePropertyImage: builder.mutation<void, { propertyImageId: number }>({
             query: ({ propertyImageId }) => ({
-                url: `/RentMate/Property/DeletePropertyImage/${propertyImageId}`,
+                url: `RentMate/Property/DeletePropertyImage/${propertyImageId}`,
                 method: 'DELETE',
             }),
         }),

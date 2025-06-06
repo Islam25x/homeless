@@ -37,3 +37,6 @@
   width: 100% !important;
   height: 34.2rem !important;
 }
+#Posts .swiper-wrapper{
+  width: 5rem !important;
+}
