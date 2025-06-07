@@ -16,6 +16,7 @@ import { useGetChatContentQuery } from '../RTK/ChatApi/ChatApi';
 import { ChatMessage } from '../../types/ChatMessage';
 import { BeatLoader } from 'react-spinners';
 import './RentalsDetails.css';
+import LogedHeader from '../Headers/LogedHeader/LogedHeader';
 
 
 
@@ -285,282 +286,285 @@ function RentalsDetails() {
   if (error || !property) return <p className="text-center mt-5 text-danger">You have to login</p>;
 
   return (
-    <section id="RentalsDetails" className="py-4">
-      <Container>
-        <p className="text-muted">
-          <Link to='/'>Home</Link> / <span className="text-dark">{property.title}</span>
-        </p>
-        <Row>
-          {/* property imgs  */}
-          <Col lg={2} md={2} sm={4}>
-            <div className="d-flex flex-column gap-2">
-              {property.propertyImages.map((propertyImage, index: number) => (
-                <div className="border p-1 position-relative" key={`${propertyImage.propertyImageId}-${index}`}>
-                  {
-                    userRole === 'landlord' && property.status === 'available' && Number(userId) === Number(property.landlordId) && (
-                      <button
-                        className='btn btn-light position-absolute top-0 end-0'
-                        onClick={() => handleDeleteImage(propertyImage.propertyImageId)}
-                      >
-                        <i className="fa-solid fa-trash-can"></i>
-                      </button>
-                    )
-                  }
-                  <img
-                    src={getImageSrc(propertyImage.image)}
-                    alt={property.title}
-                    className="img-fluid w-100"
-                  />
-                </div>
-              ))}
-              {userRole === 'landlord' && property.propertyImages.length < 4 && property.status === 'available' && Number(userId) === Number(property.landlordId) && (
-                <>
-                  <button
-                    className='btn btn-light'
-                    onClick={() => selectedFile.current?.click()}
-                  >
-                    <i className="fa-solid fa-plus" style={{ fontSize: '3rem', padding: '2rem 0' }}></i>
-                  </button>
-                  <input
-                    type="file"
-                    ref={selectedFile}
-                    style={{ display: 'none' }}
-                    onChange={handleImageUpload}
-                  />
-                </>
-              )}
-            </div>
-          </Col>
-
-          <Col lg={5} md={5} sm={8}>
-            <div className="text-center">
-              <img
-                src={getImageSrc(property.mainImage)}
-                alt={property.title}
-                className="main-img"
-              />
-            </div>
-          </Col>
-          {/* property details  */}
-          <Col lg={5} md={5} sm={8}>
-            <div className="mt-3">
-              <h3>{property.title}</h3>
-              <h4 className="mt-3 text-success">${property.price}</h4>
-
-              <div className="mt-3 d-flex align-items-center location-view">
-                <i className="fas fa-map-marker-alt text-primary me-2"></i>
-                <span>{property.location || 'Unknown Location'}</span>
-              </div>
-
-              <div className="mt-2 d-flex align-items-center location-view">
-                <i className="fas fa-eye text-primary me-2"></i>
-                <span>{property.views || 0} Views</span>
-              </div>
-
-              <div className="mt-2 d-flex align-items-center location-view">
-                <img
-                  src={property.landlordImage ? getImageSrc(property.landlordImage) : 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg'}
-                  alt="Landlord"
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    marginRight: '10px',
-                  }}
-                />
-                <span>{property.landlordName || 'Unknown Landlord'}</span>
-                {/* send message to landlord  */}
-                {userRole === 'tenant' && (
+    <>
+      <LogedHeader />
+      <section id="RentalsDetails" className="py-4">
+        <Container>
+          <p className="text-muted">
+            <Link to='/'>Home</Link> / <span className="text-dark">{property.title}</span>
+          </p>
+          <Row>
+            {/* property imgs  */}
+            <Col lg={2} md={2} sm={4}>
+              <div className="d-flex flex-column gap-2">
+                {property.propertyImages.map((propertyImage, index: number) => (
+                  <div className="border p-1 position-relative" key={`${propertyImage.propertyImageId}-${index}`}>
+                    {
+                      userRole === 'landlord' && property.status === 'available' && Number(userId) === Number(property.landlordId) && (
+                        <button
+                          className='btn btn-light position-absolute top-0 end-0'
+                          onClick={() => handleDeleteImage(propertyImage.propertyImageId)}
+                        >
+                          <i className="fa-solid fa-trash-can"></i>
+                        </button>
+                      )
+                    }
+                    <img
+                      src={getImageSrc(propertyImage.image)}
+                      alt={property.title}
+                      className="img-fluid w-100"
+                    />
+                  </div>
+                ))}
+                {userRole === 'landlord' && property.propertyImages.length < 4 && property.status === 'available' && Number(userId) === Number(property.landlordId) && (
                   <>
-                    <button onClick={handleShowChat} className={showChat ? `d-none` : `d-block btn text-primary`}>
-                      <i className="fa-brands fa-rocketchat"></i>
+                    <button
+                      className='btn btn-light'
+                      onClick={() => selectedFile.current?.click()}
+                    >
+                      <i className="fa-solid fa-plus" style={{ fontSize: '3rem', padding: '2rem 0' }}></i>
                     </button>
-                    <div className={!showChat ? `d-none` : `d-block d-flex ms-2`}>
-                      <input
-                        type="text"
-                        className="form-control mt-2"
-                        placeholder="Type your message..."
-                        value={messageContent}
-                        onChange={(e) => setMessageContent(e.target.value)}
-                      />
-                      <button onClick={handleSendMessage} className="btn btn-primary mt-2">
-                        Send
-                      </button>
-                    </div>
+                    <input
+                      type="file"
+                      ref={selectedFile}
+                      style={{ display: 'none' }}
+                      onChange={handleImageUpload}
+                    />
                   </>
                 )}
               </div>
+            </Col>
 
-              <div className="mt-2 d-flex align-items-center location-view">
-                <i className="fas fa-calendar-alt text-primary me-2"></i>
-                <span>{property.createAt}</span>
+            <Col lg={5} md={5} sm={8}>
+              <div className="text-center">
+                <img
+                  src={getImageSrc(property.mainImage)}
+                  alt={property.title}
+                  className="main-img"
+                />
+              </div>
+            </Col>
+            {/* property details  */}
+            <Col lg={5} md={5} sm={8}>
+              <div className="mt-3">
+                <h3>{property.title}</h3>
+                <h4 className="mt-3 text-success">${property.price}</h4>
+
+                <div className="mt-3 d-flex align-items-center location-view">
+                  <i className="fas fa-map-marker-alt text-primary me-2"></i>
+                  <span>{property.location || 'Unknown Location'}</span>
+                </div>
+
+                <div className="mt-2 d-flex align-items-center location-view">
+                  <i className="fas fa-eye text-primary me-2"></i>
+                  <span>{property.views || 0} Views</span>
+                </div>
+
+                <div className="mt-2 d-flex align-items-center location-view">
+                  <img
+                    src={property.landlordImage ? getImageSrc(property.landlordImage) : 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg'}
+                    alt="Landlord"
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      marginRight: '10px',
+                    }}
+                  />
+                  <span>{property.landlordName || 'Unknown Landlord'}</span>
+                  {/* send message to landlord  */}
+                  {userRole === 'tenant' && (
+                    <>
+                      <button onClick={handleShowChat} className={showChat ? `d-none` : `d-block btn text-primary`}>
+                        <i className="fa-brands fa-rocketchat"></i>
+                      </button>
+                      <div className={!showChat ? `d-none` : `d-block d-flex ms-2`}>
+                        <input
+                          type="text"
+                          className="form-control mt-2"
+                          placeholder="Type your message..."
+                          value={messageContent}
+                          onChange={(e) => setMessageContent(e.target.value)}
+                        />
+                        <button onClick={handleSendMessage} className="btn btn-primary mt-2">
+                          Send
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="mt-2 d-flex align-items-center location-view">
+                  <i className="fas fa-calendar-alt text-primary me-2"></i>
+                  <span>{property.createAt}</span>
+                </div>
+
+                <p className="mt-3">{property.description}</p>
+                <hr />
+
+                {userRole === 'admin' ? (
+                  <div className="right d-flex align-items-center gap-2">
+                    <Button
+                      variant="success"
+                      className="rounded-circle d-flex align-items-center justify-content-center p-2"
+                      style={{ width: '45px', height: '45px' }}
+                      disabled={isAcceptLoading}
+                      onClick={handleAccept}
+                    >
+                      <i className="fa-solid fa-check"></i>
+                    </Button>
+
+                    <Button
+                      variant="danger"
+                      className="rounded-circle d-flex align-items-center justify-content-center p-2"
+                      style={{ width: '45px', height: '45px' }}
+                      disabled={isDeleteLoading}
+                      onClick={handleDelete}
+                    >
+                      <i className="fa-solid fa-xmark"></i>
+                    </Button>
+                  </div>
+                ) : property.status === 'rented' ? (
+                  <div className="d-flex align-items-center gap-3 mt-3">
+                    <button className="btn Buy-Now btn-success">Rented</button>
+                    <button onClick={handleShowComments} className="btn btn-outline-primary">
+                      <i className="fas fa-comment"></i>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="d-flex align-items-center gap-3 mt-3">
+                    {userRole === 'tenant' && property.isAskForRent ? (
+                      <button
+                        className="btn Buy-Now btn-danger"
+                        onClick={handleDeleteRent}
+                      >
+                        Rent is pending
+                      </button>
+                    ) : userRole === 'tenant' && (
+                      <>
+                        <button
+                          className="btn Buy-Now btn-primary"
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          Rent Now
+                        </button>
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          style={{ display: 'none' }}
+                          onChange={handleFileChange}
+                        />
+                      </>
+                    )}
+                    <button onClick={handleShowComments} className="btn btn-outline-primary">
+                      <i className="fas fa-comment"></i>
+                    </button>
+                    {userRole === 'landlord' && Number(userId) === Number(property.landlordId) && (
+                      <>
+                        <button onClick={handleShowTenantRequests} className="btn btn-outline-primary">
+                          <i className="fa-solid fa-clock-rotate-left"></i>
+                        </button>
+                        <button className="btn btn-outline-primary" onClick={openEditModal}>
+                          <i className="fa-solid fa-pen"></i>
+                        </button>
+                        <button className="btn btn-outline-danger" onClick={handleDeleteProperty}>
+                          <i className="fa-solid fa-trash-can"></i>
+                        </button>
+                      </>
+                    )}
+                    {userRole === 'tenant' && (
+                      <button
+                        onClick={handleSave}
+                        className={`btn btn-outline-primary ${isSaved ? 'active' : ''}`}
+                      >
+                        <i className={`fa-bookmark ${isSaved ? 'fas' : 'far'}`}></i>
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
 
-              <p className="mt-3">{property.description}</p>
-              <hr />
-
-              {userRole === 'admin' ? (
-                <div className="right d-flex align-items-center gap-2">
-                  <Button
-                    variant="success"
-                    className="rounded-circle d-flex align-items-center justify-content-center p-2"
-                    style={{ width: '45px', height: '45px' }}
-                    disabled={isAcceptLoading}
-                    onClick={handleAccept}
-                  >
-                    <i className="fa-solid fa-check"></i>
-                  </Button>
-
-                  <Button
-                    variant="danger"
-                    className="rounded-circle d-flex align-items-center justify-content-center p-2"
-                    style={{ width: '45px', height: '45px' }}
-                    disabled={isDeleteLoading}
-                    onClick={handleDelete}
-                  >
-                    <i className="fa-solid fa-xmark"></i>
-                  </Button>
+              <div className={showComments ? 'd-block' : 'd-none'}>
+                <Comments propertyId={property.id} />
+              </div>
+              <div className={showTenantRequests ? 'd-block' : 'd-none'}>
+                <TenantRequests />
+              </div>
+            </Col>
+          </Row>
+        </Container>
+        {/* edit Modal */}
+        {showEditModal && (
+          <div className="modal d-block" tabIndex={-1} role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Edit Property</h5>
+                  <button type="button" className="btn-close" onClick={() => setShowEditModal(false)}></button>
                 </div>
-              ) : property.status === 'rented' ? (
-                <div className="d-flex align-items-center gap-3 mt-3">
-                  <button className="btn Buy-Now btn-success">Rented</button>
-                  <button onClick={handleShowComments} className="btn btn-outline-primary">
-                    <i className="fas fa-comment"></i>
-                  </button>
-                </div>
-              ) : (
-                <div className="d-flex align-items-center gap-3 mt-3">
-                  {userRole === 'tenant' && property.isAskForRent ? (
-                    <button
-                      className="btn Buy-Now btn-danger"
-                      onClick={handleDeleteRent}
-                    >
-                      Rent is pending
-                    </button>
-                  ) : userRole === 'tenant' && (
-                    <>
-                      <button
-                        className="btn Buy-Now btn-primary"
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        Rent Now
-                      </button>
+                <div className="modal-body">
+                  <form>
+                    <div className="mb-3">
+                      <label className="form-label">Title</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={formState.title}
+                        onChange={(e) => setFormState({ ...formState, title: e.target.value })}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Main Image</label>
                       <input
                         type="file"
-                        ref={fileInputRef}
-                        style={{ display: 'none' }}
-                        onChange={handleFileChange}
+                        className="form-control"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) setSelectedImage(file);
+                        }}
                       />
-                    </>
-                  )}
-                  <button onClick={handleShowComments} className="btn btn-outline-primary">
-                    <i className="fas fa-comment"></i>
-                  </button>
-                  {userRole === 'landlord' && Number(userId) === Number(property.landlordId) && (
-                    <>
-                      <button onClick={handleShowTenantRequests} className="btn btn-outline-primary">
-                        <i className="fa-solid fa-clock-rotate-left"></i>
-                      </button>
-                      <button className="btn btn-outline-primary" onClick={openEditModal}>
-                        <i className="fa-solid fa-pen"></i>
-                      </button>
-                      <button className="btn btn-outline-danger" onClick={handleDeleteProperty}>
-                        <i className="fa-solid fa-trash-can"></i>
-                      </button>
-                    </>
-                  )}
-                  {userRole === 'tenant' && (
-                    <button
-                      onClick={handleSave}
-                      className={`btn btn-outline-primary ${isSaved ? 'active' : ''}`}
-                    >
-                      <i className={`fa-bookmark ${isSaved ? 'fas' : 'far'}`}></i>
-                    </button>
-                  )}
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Price</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={formState.price}
+                        onChange={(e) => setFormState({ ...formState, price: e.target.value })}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Location</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={formState.location}
+                        onChange={(e) => setFormState({ ...formState, location: e.target.value })}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Description</label>
+                      <textarea
+                        className="form-control"
+                        value={formState.description}
+                        onChange={(e) => setFormState({ ...formState, description: e.target.value })}
+                        style={{ height: '8rem' }}
+                      />
+                    </div>
+                  </form>
                 </div>
-              )}
-            </div>
-
-            <div className={showComments ? 'd-block' : 'd-none'}>
-              <Comments propertyId={property.id} />
-            </div>
-            <div className={showTenantRequests ? 'd-block' : 'd-none'}>
-              <TenantRequests />
-            </div>
-          </Col>
-        </Row>
-      </Container>
-      {/* edit Modal */}
-      {showEditModal && (
-        <div className="modal d-block" tabIndex={-1} role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Edit Property</h5>
-                <button type="button" className="btn-close" onClick={() => setShowEditModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                <form>
-                  <div className="mb-3">
-                    <label className="form-label">Title</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={formState.title}
-                      onChange={(e) => setFormState({ ...formState, title: e.target.value })}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Main Image</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) setSelectedImage(file);
-                      }}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Price</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={formState.price}
-                      onChange={(e) => setFormState({ ...formState, price: e.target.value })}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Location</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={formState.location}
-                      onChange={(e) => setFormState({ ...formState, location: e.target.value })}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Description</label>
-                    <textarea
-                      className="form-control"
-                      value={formState.description}
-                      onChange={(e) => setFormState({ ...formState, description: e.target.value })}
-                      style={{ height: '8rem' }}
-                    />
-                  </div>
-                </form>
-              </div>
-              <div className="modal-footer">
-                <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
-                <Button variant="primary" onClick={handleUpdateProperty}>Save Changes</Button>
+                <div className="modal-footer">
+                  <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
+                  <Button variant="primary" onClick={handleUpdateProperty}>Save Changes</Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </section>
+        )}
+      </section>
+    </>
   );
 }
 

@@ -11,7 +11,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Card} from "react-bootstrap";
+import { Card } from "react-bootstrap";
 
 function PendingRentals() {
     const userId = localStorage.getItem("userId") || "";
@@ -28,6 +28,17 @@ function PendingRentals() {
 
 
     const pendingRentals = myProperty?.filter((property: MyProperty) => property.rentStatus === "pending");
+
+    if (pendingRentals.length === 0) {
+        return (
+            <>
+                <Container>
+                    <h2 className="text-center my-4">My Rentals</h2>
+                    <p className="text-center">you don`t have pending rentals</p>
+                </Container>
+            </>
+        );
+    }
 
     return (
         <section id="Posts">

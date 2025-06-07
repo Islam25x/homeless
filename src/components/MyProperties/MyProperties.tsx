@@ -13,7 +13,7 @@ import PendingRentals from "../PendingRentals/PendingRentals";
 import LogedHeader from "../Headers/LogedHeader/LogedHeader";
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Card} from "react-bootstrap";
+import { Card } from "react-bootstrap";
 
 function MyProperties() {
     const userId = localStorage.getItem("userId") || "";
@@ -30,6 +30,19 @@ function MyProperties() {
 
 
     const AcceptedProperty = myProperty?.filter((property: MyProperty) => property.rentStatus === "accepted");
+
+    if (AcceptedProperty.length === 0) {
+        return (
+            <>
+                <LogedHeader />
+                <Container>
+                    <h2 className="text-center my-4">My Rentals</h2>
+                    <p className="text-center">you don`t have rentals</p>
+                </Container>
+                <PendingRentals />
+            </>
+        );
+    }
 
     return (
         <>
