@@ -63,19 +63,19 @@ export const baseQueryWithReauth: BaseQueryFn<
                 // إعادة إرسال الطلب الأصلي بعد التحديث
                 result = await rawBaseQuery(args, api, extraOptions);
             } else {
+                const Logout = await rawBaseQuery(
+                    {
+                        url: 'RentMate/Auth/logout',
+                        method: 'POST',
+                    },
+                    api,
+                    extraOptions
+                );
+                console.error('❌ Failed to refresh token. Logging out.', Logout);
+                localStorage.clear()
                 console.error('❌ Refresh response did not include token.');
+                window.location.reload()
             }
-        } else {
-            const Logout = await rawBaseQuery(
-                {
-                    url: 'RentMate/Auth/logout',
-                    method: 'POST',
-                },
-                api,
-                extraOptions
-            );
-            console.error('❌ Failed to refresh token. Logging out.', Logout);
-            localStorage.clear()
         }
     }
 

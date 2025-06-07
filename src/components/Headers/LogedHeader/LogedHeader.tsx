@@ -1,49 +1,51 @@
-import React from "react";
-import { Container, NavDropdown, Navbar, Nav } from "react-bootstrap";
+import { useState } from "react";
+import { Container, NavDropdown, Navbar, Nav, Spinner } from "react-bootstrap";
 import { useLogoutMutation } from "../../RTK/Auth/AuthApi";
 import { Link, useNavigate } from "react-router-dom";
 import { getImageSrc } from "../../../utils/imageHelpers";
 import { useGetUserPhotoQuery } from "../../RTK/UserApi/UserApi";
+import Notification from "./Notification/Notification";
 import "./LogedHeader.css";
 
 const LogedHeader: React.FC = () => {
-
+  const [showNotification, setShowNotification] = useState(false);
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
-  const userId = localStorage.getItem('userId') || '';
-  const { data: profileImage } = useGetUserPhotoQuery({
-    id: Number(userId)
-  })
+  const userId = localStorage.getItem("userId") || "";
+  const userRole = (localStorage.getItem("userRole") as 'tenant' | 'landlord') || "";
 
-  const userRole: any = localStorage.getItem('userRole') || '';
-  // Logout function
+  const { data: profileImage } = useGetUserPhotoQuery({
+    id: Number(userId),
+  });
+
   const handleLogout = async () => {
     try {
-      await logout().unwrap(); // إرسال طلب logout إلى الباك
+      await logout().unwrap();
     } catch (error) {
       console.error("Logout failed on backend", error);
     }
 
-    // إزالة بيانات المستخدم من localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("userId");
     localStorage.removeItem("userRole");
     localStorage.removeItem("refreshToken");
-
-    // إعادة التوجيه
+    window.location.reload()
     navigate("/");
-    window.location.reload();
   };
 
   return (
     <header id="LogedHeader" data-aos="fade-down">
       <Navbar expand="lg" className="sticky-top">
         <Container fluid className="ms-1 me-1">
-
           {/* Logo + Brand */}
           <Navbar.Brand as={Link} to="/">
-            <img src="images/logo.png" alt="logo" className="Logo me-2" style={{ width: '50px' }} />
+            <img
+              src="images/logo.png"
+              alt="logo"
+              className="Logo me-2"
+              style={{ width: "50px" }}
+            />
             TheHomeless.org
           </Navbar.Brand>
 
@@ -52,32 +54,44 @@ const LogedHeader: React.FC = () => {
 
           {/* Collapsible Nav Area */}
           <Navbar.Collapse id="navbar-content">
-            {/* Optional navigation can go here */}
-            <Nav className="ms-auto d-flex align-items-center">
+            <Nav className="ms-auto d-flex align-items-center position-relative">
+              {/* Notification Icon */}
+              <i
+                className="notification fa-regular fa-bell"
+                onClick={() => setShowNotification(!showNotification)}
+                style={{ cursor: "pointer", position: "relative" }}
+              ></i>
+
+              {/* Notification Dropdown */}
+              {showNotification && (
+                <div className="notificationResult">
+                  <Notification />
+                </div>
+              )}
 
               {/* Chat Icon */}
-              <Link to='/Chat'>
-                <i className="chat fa-regular fa-message me-2"></i>
+              <Link to="/Chat">
+                <i className="chat fa-regular fa-message mx-2"></i>
               </Link>
 
               {/* Profile Icon */}
-              {
-                profileImage?.image ?
-                  <img
-                    src={getImageSrc(profileImage.image)}
-                    alt="Landlord"
-                    style={{
-                      width: '34px',
-                      height: '34px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      marginRight: '10px',
-                    }}
-                  /> :
-                  <div className="profile-photo">
-                    <i className="def-user fa-regular fa-user"></i>
-                  </div>
-              }
+              {profileImage?.image ? (
+                <img
+                  src={getImageSrc(profileImage.image)}
+                  alt="Landlord"
+                  style={{
+                    width: "34px",
+                    height: "34px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    marginRight: "10px",
+                  }}
+                />
+              ) : (
+                <div className="profile-photo">
+                  <i className="def-user fa-regular fa-user"></i>
+                </div>
+              )}
 
               {/* Dropdown Menu */}
               <NavDropdown
@@ -90,30 +104,38 @@ const LogedHeader: React.FC = () => {
                   <i className="def-user fa-regular fa-user me-3 mt-1 align-content-center"></i>
                   <span className="mt-1">Manage My Account</span>
                 </NavDropdown.Item>
-                {
-                  userRole === 'landlord' ? (
-                    <NavDropdown.Item as={Link} to="/AddProperties" className="d-flex">
-                      <i className="fa-solid fa-building me-3 mt-1 align-content-center"></i>
-                      <span className="mt-1">Add Properties</span>
-                    </NavDropdown.Item>
-                  ) : (
-                    <NavDropdown.Item as={Link} to="/MyProperties" className="d-flex">
-                      <i className="fa-solid fa-building me-3 mt-1 align-content-center"></i>
-                      <span className="mt-1">My properties</span>
-                    </NavDropdown.Item>
-                  )
-                }
-                {
-                  userRole === 'tenant' && (
-                    <NavDropdown.Item as={Link} to="/savedProperties" className="d-flex">
-                      <i className="fa-solid fa-bookmark me-3 mt-1 align-content-center"></i>
-                      <span className="mt-1">My collection</span>
-                    </NavDropdown.Item>
-                  )
-                }
 
+                {userRole === "landlord" ? (
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/AddProperties"
+                    className="d-flex"
+                  >
+                    <i className="fa-solid fa-building me-3 mt-1 align-content-center"></i>
+                    <span className="mt-1">Add Properties</span>
+                  </NavDropdown.Item>
+                ) : (
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/MyProperties"
+                    className="d-flex"
+                  >
+                    <i className="fa-solid fa-building me-3 mt-1 align-content-center"></i>
+                    <span className="mt-1">My Properties</span>
+                  </NavDropdown.Item>
+                )}
 
-                {/* Logout Item */}
+                {userRole === "tenant" && (
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/savedProperties"
+                    className="d-flex"
+                  >
+                    <i className="fa-solid fa-bookmark me-3 mt-1 align-content-center"></i>
+                    <span className="mt-1">My Collection</span>
+                  </NavDropdown.Item>
+                )}
+
                 <NavDropdown.Item onClick={handleLogout} className="d-flex">
                   <i className="fa-solid fa-arrow-right-from-bracket me-3 mt-1 align-content-center"></i>
                   <span className="mt-1">Logout</span>

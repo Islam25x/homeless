@@ -9,6 +9,7 @@ import { CommentSlice } from './CommentApi/CommentApi';
 import { PropertyRequestApi } from './RentalRequestApi/RentalRequestApi';
 import { UserApi } from './UserApi/UserApi';
 import { HistoryApi } from './HistoryApi/HistoryApi';
+import { NotificationApi } from './NotificationApi/NotificationApi';
 
 export const store = configureStore({
   reducer: {
@@ -21,10 +22,11 @@ export const store = configureStore({
     [CommentSlice.reducerPath]: CommentSlice.reducer,
     [PropertyRequestApi.reducerPath]: PropertyRequestApi.reducer,
     [UserApi.reducerPath]: UserApi.reducer,
-    [HistoryApi.reducerPath]: HistoryApi.reducer
+    [HistoryApi.reducerPath]: HistoryApi.reducer,
+    [NotificationApi.reducerPath]: NotificationApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(PropertySlice.middleware, authApi.middleware, AdminApi.middleware, SearchApi.middleware, SaveApi.middleware, ChatApi.middleware, CommentSlice.middleware, PropertyRequestApi.middleware, UserApi.middleware , HistoryApi.middleware),
+    getDefaultMiddleware().concat(PropertySlice.middleware, authApi.middleware, AdminApi.middleware, SearchApi.middleware, SaveApi.middleware, ChatApi.middleware, CommentSlice.middleware, PropertyRequestApi.middleware, UserApi.middleware, HistoryApi.middleware , NotificationApi.middleware),
 });
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
