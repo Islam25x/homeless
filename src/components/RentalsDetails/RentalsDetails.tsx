@@ -90,6 +90,8 @@ function RentalsDetails() {
       connection.off('ReceiveMessage', receiveHandler);
     };
   }, [connection, connectionState]);
+
+  // Admin Accept property 
   const handleAccept = async () => {
     try {
       await AcceptLandlord({ propertyId: Number(id) }).unwrap();
@@ -102,6 +104,7 @@ function RentalsDetails() {
     }
   };
 
+  // Admin Reject property 
   const handleDelete = async () => {
     try {
       await DeleteLandlord({ propertyId: Number(id) }).unwrap();
@@ -140,7 +143,6 @@ function RentalsDetails() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const formData = new FormData();
     formData.append('document', file);
 
@@ -181,6 +183,8 @@ function RentalsDetails() {
       toast.error('Failed to delete Image.');
     }
   };
+
+  // landlord Delete property 
 
   const handleDeleteProperty = async () => {
     try {
@@ -445,7 +449,26 @@ function RentalsDetails() {
                       <>
                         <button
                           className="btn Buy-Now btn-primary"
-                          onClick={() => fileInputRef.current?.click()}
+                          onClick={() => {
+
+                            toast.info(
+                              <>
+                                Please upload a .txt file with the following format:
+                                <br />
+                                <br />
+                                Line 1: Your salary
+                                <br />
+                                Line 2: Your SSN
+                                <br />
+                                Line 3: Your telephone number
+                              </>,
+                              {
+                                autoClose: 15000,
+                              }
+                            );
+
+                            fileInputRef.current?.click();
+                          }}
                         >
                           Rent Now
                         </button>
@@ -494,6 +517,7 @@ function RentalsDetails() {
             </Col>
           </Row>
         </Container>
+
         {/* edit Modal */}
         {showEditModal && (
           <div className="modal d-block" tabIndex={-1} role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>

@@ -4,21 +4,19 @@ import {
     useAcceptRentRequestMutation,
     useRejectRentRequestMutation,
 } from "../../RTK/RentalRequestApi/RentalRequestApi";
+import { useParams } from "react-router-dom";
 import { Container, Spinner, Alert, Button, Modal } from "react-bootstrap";
+import { TenantRequest } from "../../../types/TenantRequest";
+import { getImageSrc } from "../../../utils/imageHelpers";
 
-interface TenantRequest {
-    id: number;
-    tenantName: string;
-    image?: string;
-    createAt: string;
-    rentId: number;
-    requirmentDocument: string[]
-}
+
 
 function TenantRequests() {
     const userId = localStorage.getItem("userId") || "";
+    const { id } = useParams<{ id: string }>();
     const { data: tenantRequests, isLoading, isError, refetch } = useGetTenantRequestsQuery({
         landlordId: Number(userId),
+        propertyId: Number(id)
     });
 
     const [acceptTenantRequest, { isLoading: isAcceptLoading, isError: isAcceptError }] =
@@ -63,14 +61,14 @@ function TenantRequests() {
             {isAcceptError && <Alert variant="danger" className="text-center">Failed to accept request.</Alert>}
             {isRejectError && <Alert variant="danger" className="text-center">Failed to reject request.</Alert>}
 
-            {tenantRequests?.map((tenantRequest: TenantRequest) => (
+            {tenantRequests?.map((tenantRequest) => (
                 <div
                     key={`${tenantRequest.id}-${tenantRequest.tenantName}`}
                     className="tenantRequest-card d-flex justify-content-between align-items-center p-3 mb-3 rounded"
                 >
                     <div className="left d-flex align-items-center">
-                        {tenantRequest.image ? (
-                            <img className="me-4" src={tenantRequest.image} alt={tenantRequest.tenantName} />
+                        {tenantRequest.image !== 'null' ? (
+                            <img className="me-4 profile-photo" src={getImageSrc(tenantRequest.tenantImage)} alt={tenantRequest.tenantName} />
                         ) : (
                             <div className="profile-photo me-4">
                                 <i className="def-user fa-regular fa-user"></i>

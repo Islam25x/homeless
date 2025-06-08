@@ -75,6 +75,8 @@ export const baseQueryWithReauth: BaseQueryFn<
                 localStorage.clear()
                 console.error('❌ Refresh response did not include token.');
                 window.location.reload()
+                window.location.href = '/';
+                
             }
         }
     }
