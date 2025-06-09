@@ -8,7 +8,7 @@ import "./Notification.css";
 
 function Notification() {
     const userId = localStorage.getItem("userId") || "";
-    const signalRUrl = `https://rentmate.runasp.net/notificationhub`;
+    const signalRUrl = `https://rentmate.runasp.net/notificationhub?userId=${userId}`;
 
     const {
         connection,
@@ -19,7 +19,7 @@ function Notification() {
 
     const {
         data: initialNotifications,
-        isLoading : loadingNotifications,
+        isLoading: loadingNotifications,
         refetch
     } = useGetNotificationQuery({ userId: Number(userId) });
 
@@ -28,11 +28,16 @@ function Notification() {
     const handleMarkAsSeen = async (id: number) => {
         try {
             await notificationMarkAsSeen({ notificationId: id }).unwrap();
-            refetch(); // تحديث القائمة
         } catch {
             toast.error("❌ Failed to mark notification as seen");
         }
     };
+    useEffect(() => {
+        if (initialNotifications) {
+            setLiveNotifications(initialNotifications);
+        }
+    }, [initialNotifications]);
+    console.log(liveNotifications);
 
     // استقبال الإشعارات من SignalR
     useEffect(() => {
@@ -55,7 +60,7 @@ function Notification() {
         ...(liveNotifications || []),
         ...(initialNotifications || [])
     ];
-
+    console.log('notifications', liveNotifications);
 
     return (
         <Container className="notification-container mt-4">
@@ -80,9 +85,16 @@ function Notification() {
                                         {new Date(notif.actionDate).toLocaleString()}
                                     </div>
                                 </div>
-                                <Card.Text className="notification-desc">
-                                    {notif.description}
-                                </Card.Text>
+                                {
+                                    notif.isSeen ? (
+                                        <Card.Text className="notification-desc">
+                                            {notif.description}
+                                        </Card.Text>
+                                    ) : (
+                                        <Card.Text className="notification-desc fw-bold">
+                                            {notif.description}
+                                        </Card.Text>
+                                    )}
                             </Card.Body>
                         </Card>
                     </Link>

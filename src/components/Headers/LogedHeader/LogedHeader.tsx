@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { getImageSrc } from "../../../utils/imageHelpers";
 import { useGetUserPhotoQuery } from "../../RTK/UserApi/UserApi";
 import Notification from "./Notification/Notification";
+import { useEffect } from "react";
+import useSignalR from "./Notification/useSignalRNotify";
+import { toast } from "react-toastify";
 import "./LogedHeader.css";
 
 const LogedHeader: React.FC = () => {
@@ -14,6 +17,14 @@ const LogedHeader: React.FC = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId") || "";
   const userRole = (localStorage.getItem("userRole") as 'tenant' | 'landlord') || "";
+  const signalRUrl = `https://rentmate.runasp.net/notificationhub?userId=${userId}`;
+
+  const {
+    connection,
+    connectionState,
+    notifications: liveNotifications,
+    setNotifications: setLiveNotifications
+  } = useSignalR(signalRUrl);
 
   const { data: profileImage } = useGetUserPhotoQuery({
     id: Number(userId),
@@ -37,6 +48,29 @@ const LogedHeader: React.FC = () => {
     window.location.reload()
     navigate("/");
   };
+
+
+  // استقبال الإشعارات من SignalR
+  useEffect(() => {
+    if (!connection || connectionState !== 'Connected') return;
+
+    const receiveNotification = (newNotification: any) => {
+      console.log('📥 Received via SignalR:', newNotification);
+      setLiveNotifications(prev => [newNotification, ...prev]);
+      toast.info(newNotification.description || "📢 New Notification");
+    };
+
+    connection.on('ReceiveNotification', receiveNotification);
+
+    return () => {
+      connection.off('ReceiveNotification', receiveNotification);
+    };
+  }, [connection, connectionState]);
+
+  const allNotifications = [
+    ...(liveNotifications || [])
+  ];
+  console.log('notifications', liveNotifications);
 
   return (
     <header id="LogedHeader" data-aos="fade-down">
@@ -65,7 +99,12 @@ const LogedHeader: React.FC = () => {
                 onClick={() => setShowNotification(!showNotification)}
                 style={{ cursor: "pointer", position: "relative" }}
               >
-                <span className="notifyNumber">{unSeenNotif?.numOfUnSeenNotififcations}</span>
+                {
+                  unSeenNotif?.numOfUnSeenNotififcations > 0 && (
+                    < span className="notifyNumber">{unSeenNotif?.numOfUnSeenNotififcations}</span>
+                  )
+                }
+
               </i>
 
               {/* Notification Dropdown */}
@@ -151,7 +190,7 @@ const LogedHeader: React.FC = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-    </header>
+    </header >
   );
 };
 
