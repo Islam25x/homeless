@@ -1,66 +1,37 @@
-import { useGetNotificationQuery, useNotificationMarkAsSeenMutation } from "../../../RTK/NotificationApi/NotificationApi";
+import { useNotificationMarkAsSeenMutation } from "../../../RTK/NotificationApi/NotificationApi";
 import { Card, Container, Spinner } from "react-bootstrap";
-import { useEffect } from "react";
-import useSignalR from "./useSignalRNotify";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { notificationType } from "../../../../types/notificationType";
 import "./Notification.css";
+type NotificationProps = {
+    liveNotifications: notificationType[];
+    setLiveNotifications: React.Dispatch<React.SetStateAction<notificationType[]>>;
+    loadingNotifications: boolean;
+};
 
-function Notification() {
+function Notification({ liveNotifications, setLiveNotifications , loadingNotifications }: NotificationProps) {
     const userId = localStorage.getItem("userId") || "";
-    const signalRUrl = `https://rentmate.runasp.net/notificationhub?userId=${userId}`;
 
-    const {
-        connection,
-        connectionState,
-        notifications: liveNotifications,
-        setNotifications: setLiveNotifications
-    } = useSignalR(signalRUrl);
 
-    const {
-        data: initialNotifications,
-        isLoading: loadingNotifications,
-        refetch
-    } = useGetNotificationQuery({ userId: Number(userId) });
 
     const [notificationMarkAsSeen] = useNotificationMarkAsSeenMutation();
 
     const handleMarkAsSeen = async (id: number) => {
         try {
             await notificationMarkAsSeen({ notificationId: id }).unwrap();
+
+            // نحدث الحالة مباشرة
+            setLiveNotifications(prev =>
+                prev.map(notif =>
+                    notif.id === id ? { ...notif, isSeen: true } : notif
+                )
+            );
         } catch {
-            toast.error("❌ Failed to mark notification as seen");
+            toast.error("❌ فشل تعليم الإشعار كمقروء");
         }
     };
-    useEffect(() => {
-        if (initialNotifications) {
-            setLiveNotifications(initialNotifications);
-        }
-    }, [initialNotifications]);
-    console.log(liveNotifications);
 
-    // استقبال الإشعارات من SignalR
-    useEffect(() => {
-        if (!connection || connectionState !== 'Connected') return;
-
-        const receiveNotification = (newNotification: any) => {
-            console.log('📥 Received via SignalR:', newNotification);
-            setLiveNotifications(prev => [newNotification, ...prev]);
-            toast.info(newNotification.description || "📢 New Notification");
-        };
-
-        connection.on('ReceiveNotification', receiveNotification);
-
-        return () => {
-            connection.off('ReceiveNotification', receiveNotification);
-        };
-    }, [connection, connectionState]);
-
-    const allNotifications = [
-        ...(liveNotifications || []),
-        ...(initialNotifications || [])
-    ];
-    console.log('notifications', liveNotifications);
 
     return (
         <Container className="notification-container mt-4">

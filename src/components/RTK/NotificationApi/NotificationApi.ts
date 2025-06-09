@@ -1,14 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQueryWithReauth';
+import { notificationType } from '../../../types/notificationType';
 
-interface notificationType {
-    id: number
-    actionDate: string
-    description: string
-    notificationType: string
-    notificationTypeId: number
-    isSeen: boolean
-}
+
 
 export const NotificationApi = createApi({
     reducerPath: 'notification',

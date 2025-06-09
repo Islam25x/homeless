@@ -154,9 +154,10 @@ function RentalsDetails() {
       }).unwrap();
       refetch();
       toast.success('Rental request sent successfully!');
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      toast.error('Failed to send rental request.');
+      const message = err?.data || err?.error || 'حدث خطأ أثناء الإرسال';
+      toast.error(message);
     }
   };
 
@@ -463,7 +464,7 @@ function RentalsDetails() {
                                 Line 3: Your telephone number
                               </>,
                               {
-                                autoClose: 15000,
+                                autoClose: 10000,
                               }
                             );
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Container, NavDropdown, Navbar, Nav } from "react-bootstrap";
-import { useGetNumberOfUnSeenQuery } from "../../RTK/NotificationApi/NotificationApi";
 import { useLogoutMutation } from "../../RTK/Auth/AuthApi";
 import { Link, useNavigate } from "react-router-dom";
 import { getImageSrc } from "../../../utils/imageHelpers";
@@ -8,11 +7,11 @@ import { useGetUserPhotoQuery } from "../../RTK/UserApi/UserApi";
 import Notification from "./Notification/Notification";
 import { useEffect } from "react";
 import useSignalR from "./Notification/useSignalRNotify";
-import { toast } from "react-toastify";
 import "./LogedHeader.css";
 
 const LogedHeader: React.FC = () => {
   const [showNotification, setShowNotification] = useState(false);
+  const [unseenCount, setUnseenCount] = useState(0);
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId") || "";
@@ -20,18 +19,14 @@ const LogedHeader: React.FC = () => {
   const signalRUrl = `https://rentmate.runasp.net/notificationhub?userId=${userId}`;
 
   const {
-    connection,
-    connectionState,
     notifications: liveNotifications,
-    setNotifications: setLiveNotifications
+    setNotifications: setLiveNotifications,
+    loadingNotifications
   } = useSignalR(signalRUrl);
 
   const { data: profileImage } = useGetUserPhotoQuery({
     id: Number(userId),
   });
-  const {
-    data: unSeenNotif,
-  } = useGetNumberOfUnSeenQuery({ userId: Number(userId) });
 
   const handleLogout = async () => {
     try {
@@ -49,28 +44,13 @@ const LogedHeader: React.FC = () => {
     navigate("/");
   };
 
-
-  // استقبال الإشعارات من SignalR
   useEffect(() => {
-    if (!connection || connectionState !== 'Connected') return;
+    const count = liveNotifications.filter(n => !n.isSeen).length;
+    setUnseenCount(count);
+  }, [liveNotifications, unseenCount]);
 
-    const receiveNotification = (newNotification: any) => {
-      console.log('📥 Received via SignalR:', newNotification);
-      setLiveNotifications(prev => [newNotification, ...prev]);
-      toast.info(newNotification.description || "📢 New Notification");
-    };
+  console.log('filter', unseenCount);
 
-    connection.on('ReceiveNotification', receiveNotification);
-
-    return () => {
-      connection.off('ReceiveNotification', receiveNotification);
-    };
-  }, [connection, connectionState]);
-
-  const allNotifications = [
-    ...(liveNotifications || [])
-  ];
-  console.log('notifications', liveNotifications);
 
   return (
     <header id="LogedHeader" data-aos="fade-down">
@@ -100,8 +80,8 @@ const LogedHeader: React.FC = () => {
                 style={{ cursor: "pointer", position: "relative" }}
               >
                 {
-                  unSeenNotif?.numOfUnSeenNotififcations > 0 && (
-                    < span className="notifyNumber">{unSeenNotif?.numOfUnSeenNotififcations}</span>
+                  unseenCount > 0 && (
+                    < span className="notifyNumber">{unseenCount}</span>
                   )
                 }
 
@@ -110,9 +90,14 @@ const LogedHeader: React.FC = () => {
               {/* Notification Dropdown */}
               {showNotification && (
                 <div className="notificationResult">
-                  <Notification />
+                  <Notification
+                    liveNotifications={liveNotifications}
+                    setLiveNotifications={setLiveNotifications}
+                    loadingNotifications={loadingNotifications}
+                  />
                 </div>
               )}
+
 
               {/* Chat Icon */}
               <Link to="/Chat">
