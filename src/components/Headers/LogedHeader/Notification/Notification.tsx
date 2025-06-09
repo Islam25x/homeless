@@ -1,15 +1,61 @@
-import { useGetNotificationQuery } from "../../../RTK/NotificationApi/NotificationApi";
+import { useGetNotificationQuery, useNotificationMarkAsSeenMutation } from "../../../RTK/NotificationApi/NotificationApi";
 import { Card, Container, Spinner } from "react-bootstrap";
-import "./Notification.css";
+import { useEffect } from "react";
+import useSignalR from "./useSignalRNotify";
 import { Link } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import "./Notification.css";
 
 function Notification() {
     const userId = localStorage.getItem("userId") || "";
+    const signalRUrl = `https://rentmate.runasp.net/notificationhub`;
+
     const {
-        data: notifications,
-        isLoading: loadingNotifications,
+        connection,
+        connectionState,
+        notifications: liveNotifications,
+        setNotifications: setLiveNotifications
+    } = useSignalR(signalRUrl);
+
+    const {
+        data: initialNotifications,
+        isLoading : loadingNotifications,
+        refetch
     } = useGetNotificationQuery({ userId: Number(userId) });
+
+    const [notificationMarkAsSeen] = useNotificationMarkAsSeenMutation();
+
+    const handleMarkAsSeen = async (id: number) => {
+        try {
+            await notificationMarkAsSeen({ notificationId: id }).unwrap();
+            refetch(); // تحديث القائمة
+        } catch {
+            toast.error("❌ Failed to mark notification as seen");
+        }
+    };
+
+    // استقبال الإشعارات من SignalR
+    useEffect(() => {
+        if (!connection || connectionState !== 'Connected') return;
+
+        const receiveNotification = (newNotification: any) => {
+            console.log('📥 Received via SignalR:', newNotification);
+            setLiveNotifications(prev => [newNotification, ...prev]);
+            toast.info(newNotification.description || "📢 New Notification");
+        };
+
+        connection.on('ReceiveNotification', receiveNotification);
+
+        return () => {
+            connection.off('ReceiveNotification', receiveNotification);
+        };
+    }, [connection, connectionState]);
+
+    const allNotifications = [
+        ...(liveNotifications || []),
+        ...(initialNotifications || [])
+    ];
+
 
     return (
         <Container className="notification-container mt-4">
@@ -19,10 +65,10 @@ function Notification() {
                 <div className="text-center">
                     <Spinner animation="border" />
                 </div>
-            ) : notifications && notifications.length > 0 ? (
-                notifications.map((notif) => (
-                    <Link to={notif.notificationType === 'Message' ? `/Chat` : `/RentalsDetails/${notif.notificationTypeId}` }>
-                        <Card key={notif.id} className="notification-card mb-3">
+            ) : liveNotifications && liveNotifications.length > 0 ? (
+                liveNotifications.map((notif) => (
+                    <Link key={notif.id} onClick={() => handleMarkAsSeen(notif.id)} to={notif.notificationType === 'Message' ? `/Chat` : `/RentalsDetails/${notif.notificationTypeId}`}>
+                        <Card className="notification-card mb-3">
                             <Card.Body>
                                 <div className="d-flex justify-content-between">
                                     <div>

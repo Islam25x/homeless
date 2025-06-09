@@ -27,7 +27,7 @@ export const authApi = createApi({
             query: ({ name, password }) => ({
                 url: 'RentMate/Auth/Login',
                 method: 'POST',
-                params: { name, password },
+                body: {name , password}
             }),
         }),
         register: builder.mutation<AuthModelDto | { message: string }, { userDto: NewUserDto; role: string }>({

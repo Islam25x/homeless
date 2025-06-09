@@ -6,6 +6,7 @@ const useSignalR = (hubUrl: string) => {
     const [connectionState, setConnectionState] = useState<'Disconnected' | 'Connecting' | 'Connected'>('Disconnected');
     const [messages, setMessages] = useState<any[]>([]);
     const [UsersChat, setUsersChat] = useState<any[]>([]);
+    const [Notifications, setNotifications] = useState<any[]>([]);
 
     useEffect(() => {
         let newConnection: signalR.HubConnection;
@@ -28,9 +29,9 @@ const useSignalR = (hubUrl: string) => {
             newConnection.onclose(() => setConnectionState('Disconnected'));
 
             newConnection.on('UpdateUserList', (updatedUsers: any[]) => {
-            console.log("📨 Received updated user list from SignalR", updatedUsers);
-            setUsersChat(updatedUsers);
-        });
+                console.log("📨 Received updated user list from SignalR", updatedUsers);
+                setUsersChat(updatedUsers);
+            });
 
             try {
                 setConnectionState('Connecting');
@@ -52,7 +53,7 @@ const useSignalR = (hubUrl: string) => {
         };
     }, [hubUrl]);
 
-    return { connection, connectionState, messages, setMessages , UsersChat , setUsersChat };
+    return { connection, connectionState, messages, setMessages, UsersChat, setUsersChat, Notifications , setNotifications };
 };
 
 export default useSignalR;

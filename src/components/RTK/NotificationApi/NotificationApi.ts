@@ -2,11 +2,12 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
 interface notificationType {
-    id:number
+    id: number
     actionDate: string
     description: string
     notificationType: string
     notificationTypeId: number
+    isSeen: boolean
 }
 
 export const NotificationApi = createApi({
@@ -22,7 +23,16 @@ export const NotificationApi = createApi({
                 method: 'DELETE',
             }),
         }),
+        getNumberOfUnSeen: builder.query<any, { userId: number }>({
+            query: ({ userId }) => `RentMate/Notification/NumberOfUnSeen?userId=${userId}`,
+        }),
+        notificationMarkAsSeen: builder.mutation<any, { notificationId: number }>({
+            query: ({ notificationId }) => ({
+                url: `RentMate/Notification/MarkAsSeen?notificationId=${notificationId}`,
+                method: 'POST',
+            }),
+        }),
     }),
 });
 
-export const { useGetNotificationQuery, useDeleteNotificationMutation } = NotificationApi
+export const { useGetNotificationQuery, useDeleteNotificationMutation, useGetNumberOfUnSeenQuery, useNotificationMarkAsSeenMutation } = NotificationApi

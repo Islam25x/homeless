@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Container, NavDropdown, Navbar, Nav, Spinner } from "react-bootstrap";
+import { Container, NavDropdown, Navbar, Nav } from "react-bootstrap";
+import { useGetNumberOfUnSeenQuery } from "../../RTK/NotificationApi/NotificationApi";
 import { useLogoutMutation } from "../../RTK/Auth/AuthApi";
 import { Link, useNavigate } from "react-router-dom";
 import { getImageSrc } from "../../../utils/imageHelpers";
@@ -17,6 +18,9 @@ const LogedHeader: React.FC = () => {
   const { data: profileImage } = useGetUserPhotoQuery({
     id: Number(userId),
   });
+  const {
+    data: unSeenNotif,
+  } = useGetNumberOfUnSeenQuery({ userId: Number(userId) });
 
   const handleLogout = async () => {
     try {
@@ -60,7 +64,9 @@ const LogedHeader: React.FC = () => {
                 className="notification fa-regular fa-bell"
                 onClick={() => setShowNotification(!showNotification)}
                 style={{ cursor: "pointer", position: "relative" }}
-              ></i>
+              >
+                <span className="notifyNumber">{unSeenNotif?.numOfUnSeenNotififcations}</span>
+              </i>
 
               {/* Notification Dropdown */}
               {showNotification && (
