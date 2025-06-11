@@ -103,7 +103,7 @@
 .chat-footer {
   padding: 10px;
   position: absolute;
-  width: 98%;
+  width: 64%;
   bottom: 0;
 }
 
@@ -114,4 +114,29 @@
 
 .chat-input::placeholder {
   color: #b0b3b8;
+}
+/* Hide/show panels on mobile */
+
+@media (max-width: 768px) {
+  .messenger-panel {
+    display: none;
+  }
+
+  .chat-panel-mobile {
+    display: none;
+  }
+
+  .show-messenger {
+    display: block !important;
+  }
+
+  .show-chat {
+    display: block !important;
+  }
+  .chat-footer {
+    padding: 10px;
+    position: absolute;
+    width: 95%;
+    bottom: 0;
+  }
 }

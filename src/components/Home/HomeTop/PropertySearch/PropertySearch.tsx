@@ -26,7 +26,7 @@ const PropertySearch = () => {
             <Form onSubmit={handleSearchSubmit}>
                 <div className="mb-3 d-flex justify-content-between align-items-center">
                     <h5 className="search-heading">Search for available properties</h5>
-                    <Button variant="primary" type="submit">Search Properties</Button>
+                    <Button variant="primary" type="submit" style={{marginTop:'-1rem'}}>Search Properties</Button>
                 </div>
                 <Row className="align-items-end">
                     <Col md={4}>

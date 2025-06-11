@@ -51,11 +51,10 @@ const HomeTop = () => {
             </div>
           </Col>
           <Col lg={7} md={7} data-aos="fade-left">
-            <img src="images\home copy svg.svg" alt="homeImage" style={{ width: '100%' }} />
+            <img src="images\home copy svg.svg" alt="homeImage" style={{ width: '100%' , height:'100%'}} />
           </Col>
         </Row>
-        <div className="search" data-aos="fade-up"
-          data-aos-duration="2000">
+        <div className="search">
           <PropertySearch />
         </div>
       </Container>

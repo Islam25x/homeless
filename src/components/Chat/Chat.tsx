@@ -14,17 +14,17 @@ import useSignalR from './useSignalR';
 import { ChatMessage } from '../../types/ChatMessage';
 import './Chat.css';
 
-
 function Chat() {
     const storedId = localStorage.getItem('userId');
     const userId = storedId ? parseInt(storedId) : 0;
     const username: any = JSON.parse(localStorage.getItem("user") || '[]');
     const signalRUrl = `https://rentmate.runasp.net/chatHub?userId=${userId}`;
 
-    const { connection, connectionState, messages , setMessages , UsersChat , setUsersChat  } = useSignalR(signalRUrl);
+    const { connection, connectionState, messages, setMessages, UsersChat, setUsersChat } = useSignalR(signalRUrl);
 
     const [selectedReceiverId, setSelectedReceiverId] = useState<number | null>(null);
     const [messageContent, setMessageContent] = useState('');
+    const [showChatOnly, setShowChatOnly] = useState(false);
 
     const { data: usersInChat, isLoading, isError, refetch } = useGetusersChatQuery({ userID: userId });
 
@@ -39,8 +39,8 @@ function Chat() {
     );
 
     const [sendMessage] = useSendMessageMutation();
-    // console.log(usersInChat);
-        useEffect(() => {
+
+    useEffect(() => {
         if (usersInChat) {
             setUsersChat(usersInChat);
         }
@@ -51,8 +51,13 @@ function Chat() {
             setMessages(chatMessages);
         }
     }, [chatMessages]);
-    console.log(UsersChat);
-    
+
+    const handleUserClick = (id: number) => {
+        setSelectedReceiverId(id);
+        if (window.innerWidth <= 768) {
+            setShowChatOnly(true);
+        }
+    };
 
     const selectedUser = UsersChat?.find((user: any) => user.senderId === selectedReceiverId);
     const userImage = selectedUser?.senderImage || 'https://img.freepik.com/vecteurs-premium/icones-utilisateur-comprend-icones-utilisateur-symboles-icones-personnes-elements-conception-graphique-qualite-superieure_981536-526.jpg?semt=ais_hybrid&w=740';
@@ -69,7 +74,6 @@ function Chat() {
                     message: messageContent,
                 });
 
-                // أضف الرسالة فورًا محليًا
                 setMessages((prev) => [
                     ...prev,
                     {
@@ -90,7 +94,6 @@ function Chat() {
         if (!connection || connectionState !== 'Connected') return;
 
         const receiveHandler = (message: ChatMessage) => {
-            console.log('✅ Received message via SignalR:', message);
             setMessages((prev) => [...prev, message]);
         };
 
@@ -107,7 +110,13 @@ function Chat() {
             <Container fluid className="chat-container">
                 <Row style={{ borderTop: '1px solid #c8c8c8' }}>
                     {/* Sidebar */}
-                    <Col lg={4} md={4} sm={12} className="messenger-panel">
+                    <Col
+                        lg={4}
+                        md={4}
+                        sm={12}
+                        className={`messenger-panel ${!showChatOnly ? 'show-messenger' : ''}`}
+                        style={{ borderRight: '1px solid #bebebe' }}
+                    >
                         <h5 className="header my-3 text-dark">Chats</h5>
                         <Form.Control type="text" placeholder="Search Messenger" className="search-box" />
                         <div className="tabs d-flex justify-content-between my-2">
@@ -133,9 +142,7 @@ function Chat() {
                                 <ListGroup.Item
                                     key={chat.senderId}
                                     className={`chat-item ${chat.unread ? 'unread' : ''}`}
-                                    onClick={() => {
-                                        setSelectedReceiverId(chat.senderId);
-                                    }}
+                                    onClick={() => handleUserClick(chat.senderId)}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <div className="chat-user">
@@ -155,12 +162,22 @@ function Chat() {
                     </Col>
 
                     {/* Chat content */}
-                    <Col lg={8} md={8} sm={12} className="chat-container">
+                    <Col
+                        lg={8}
+                        md={8}
+                        sm={12}
+                        className={`chat-panel-mobile ${showChatOnly ? 'show-chat' : ''}`}
+                    >
                         {selectedReceiverId === null ? (
                             <p className="text-muted text-center mt-5">Select a chat to view messages</p>
                         ) : (
                             <>
                                 <div className="chat-header d-flex align-items-center">
+                                    {showChatOnly && (
+                                        <Button variant="link" onClick={() => setShowChatOnly(false)} className="me-2">
+                                            <i className="fa-solid fa-arrow-left"></i>
+                                        </Button>
+                                    )}
                                     <Image src={userImage ? getImageSrc(userImage) : userImage} roundedCircle className="chat-avatar" />
                                     <div className="chat-info ms-2">
                                         <div className="chat-name text-dark">{userName}</div>
@@ -204,7 +221,7 @@ function Chat() {
                         )}
                     </Col>
                 </Row>
-            </Container>
+            </Container >
         </>
     );
 }

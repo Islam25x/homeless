@@ -1,26 +1,115 @@
-footer{
-    border-top: 1px solid #cacaca;
-    color: white;
-    background-color: black;
-    font-size: 1.15rem;
-    padding: 22rem 0 1rem;
-    position: relative;
+footer {
+  border-top: 1px solid #cacaca;
+  color: white;
+  background-color: black;
+  font-size: 1.15rem;
+  padding: 22rem 0 1rem;
+  position: relative;
 }
-footer .left img{
-    border-radius: 1rem;
-    margin-right: 1rem;
+
+footer .left img {
+  border-radius: 1rem;
+  margin-bottom: 1rem;
 }
-footer p{
-    color: white;
-    margin-top: -1rem;
+
+footer p {
+  color: white;
+  margin-top: 1rem;
+  font-size: 0.85rem;
 }
-footer .social-icons .btn{
-    border-radius: 50%;
-    margin-left: .2rem;
+
+footer .social-icons {
+  margin-top: 1rem;
 }
-footer ul li a{
-    color: white !important;
+
+footer .social-icons .btn {
+  border-radius: 50%;
+  margin: 0 0.3rem;
+  padding: 0.5rem 0.6rem;
+  font-size: 1rem;
 }
-footer ul li:hover{
-    text-decoration: underline;
+
+footer ul {
+  padding-left: 0;
+}
+
+footer ul li a {
+  color: white !important;
+  font-size: 0.85rem;
+}
+
+footer ul li:hover {
+  text-decoration: underline;
+}
+footer .brand h2 {
+  font-size: 2.5rem;
+  transition: font-size 0.3s ease;
+}
+@media (min-width: 1400px) {
+  footer .brand h2 {
+    font-size: !important 2.5rem;
+  }
+}
+@media (min-width: 1200px) {
+  footer .brand h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 992px) {
+  footer .left img {
+    width: 4rem;
+    height: 4rem;
+  }
+  footer .brand h2 {
+    font-size: 1.2rem;
+  }
+  footer .social-icons {
+    justify-self: left;
+  }
+}
+
+/* Responsive tweaks */
+@media (min-width: 768px) {
+  footer {
+    text-align: center;
+  }
+
+  footer .left {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+    footer .left img {
+    width: 4rem;
+    height: 4rem;
+  }
+  footer .brand h2 {
+    font-size: 1.2rem;
+  }
+
+  footer .social-icons {
+    justify-self: left;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  footer p {
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  footer h6 {
+    font-size: 1rem;
+  }
+
+  footer ul li a {
+    font-size: 0.75rem;
+  }
+
+  footer .social-icons .btn {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.5rem;
+  }
 }

@@ -28,7 +28,7 @@ function Dashboard() {
     <section id='Admin'>
       <div className="Dashboard d-flex">
         <AdminNav activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
-        <div className="Dashboard-ctn" style={{ width: '100%' , height:'100vh' }}>
+        <div className="Dashboard-ctn" style={{ width: '100%'}}>
           <DashboardTop />
           {renderActiveComponent()}
         </div>

@@ -5,8 +5,7 @@
   padding: 4rem 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: absolute;
-  top: 76%;
-  left: 6.5%;
+  top: 75%;
 }
 
 .search-heading {
@@ -19,6 +18,14 @@
   padding: 10px;
   font-weight: 500;
 }
+.property-search-container .input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+  margin-top: 1rem;
+}
 
 .input-group .form-control {
   border-radius: 8px 0 0 8px;
@@ -28,4 +35,15 @@
   background-color: white;
   border-left: 0;
   border-radius: 0 8px 8px 0;
+}
+@media (max-width: 991px) {
+  .property-search-container {
+    top: 75%;
+  }
+}
+
+@media (max-width: 576px) {
+  .property-search-container {
+    top: 69%;
+  }
 }

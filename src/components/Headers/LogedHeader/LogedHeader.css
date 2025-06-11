@@ -11,6 +11,7 @@
   transition: 0.3s;
   cursor: pointer;
 }
+
 .notificationResult {
   height: 61vh;
   overflow-y: scroll;
@@ -19,7 +20,9 @@
   position: absolute;
   top: 3rem;
   left: -13rem;
+  z-index: 1000;
 }
+
 .notifyNumber {
   background-color: rgb(0, 162, 255);
   color: white;
@@ -33,6 +36,7 @@
   top: -6px;
   left: 19px;
 }
+
 .profile-photo .def-user,
 .chat,
 .notification {
@@ -42,45 +46,82 @@
   align-items: center;
   justify-content: center;
 }
+
 .profile-photo:hover,
 .chat:hover,
 .notification:hover {
   background-color: white;
   color: rgb(76, 76, 245);
 }
+
 .dropdown {
   position: absolute;
-  right: 1rem;
+  right: 0rem;
 }
+
 .dropdown a {
   color: white;
 }
+
 .dropdown-toggle {
   opacity: 0;
 }
+
 .dropdown-menu.show {
   margin: 0.5rem 0 0 -12rem;
-  background: linear-gradient(
-    135deg,
-    rgba(149, 149, 149, 0.7),
-    rgba(0, 0, 0, 0.733)
-  ); /* لون خلفية متدرج */
+  background: linear-gradient(135deg, rgba(149, 149, 149, 0.7), rgba(0, 0, 0, 0.733));
   backdrop-filter: blur(10px);
 }
+
 .dropdown-item {
   color: white !important;
 }
+
 .dropdown-item h6 {
   font-weight: 400;
 }
+
 .dropdown-item i {
   color: white !important;
 }
+
 .dropdown-item:hover,
 .dropdown-item a:hover {
   background-color: white;
   color: black !important;
 }
+
 .dropdown-item:hover > i {
   color: black !important;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 768px) {
+  .notificationResult {
+    left: auto;
+    right: 0;
+    width: 100vw;
+    max-width: 100%;
+  }
+
+  .dropdown-menu.show {
+    margin-left: -8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .notificationResult {
+    position: fixed;
+    top: 3.5rem;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: calc(100vh - 3.5rem);
+    z-index: 1050;
+    border-radius: 0;
+  }
+
+  .dropdown-menu.show {
+    margin-left: -6rem;
+  }
 }

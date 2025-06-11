@@ -55,3 +55,21 @@
 #ExploreRentals .active {
   background-color: red !important;
 }
+/* ✅ Responsive media queries */
+@media (max-width: 992px) {
+  #ExploreRentals {
+    padding-top: 0rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #ExploreRentals {
+    padding-top: 0rem;
+  }
+}
+
+@media (max-width: 576px) {
+  #ExploreRentals {
+    padding-top: 0rem;
+  }
+}

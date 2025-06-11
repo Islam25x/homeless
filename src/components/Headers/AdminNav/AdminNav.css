@@ -1,9 +1,7 @@
 .sidebar {
-  /* position: fixed; */
   position: relative;
   width: 25%;
-  /* left: 0;
-  top: 0; */
+  height: 100vh;
   border-right: 1px solid #374151;
   z-index: 1030;
 }
@@ -19,12 +17,12 @@
   height: 50px;
   width: 50px;
 }
-.sidebar .logo h2{
-    font-weight: 400;
-    font-size: 1.2rem;
+.sidebar .logo h2 {
+  font-weight: 400;
+  font-size: 1.2rem;
 }
 
-.sidebar p{
+.sidebar p {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -49,3 +47,8 @@
   display: grid;
 }
 
+@media (max-width: 768px) {
+  .sidebar {
+    height: auto;
+  }
+}

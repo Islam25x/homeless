@@ -87,24 +87,24 @@ const Footer: React.FC = () => {
   return (
     <footer>
       <Container>
-        <Row>
+        <Row className="gy-5">
           {/* Logo and Info */}
-          <Col lg={4} md={4} sm={12}>
-            <div className="left d-flex align-items-center">
+          <Col lg={4} md={6} sm={12} className="text-center text-md-start">
+            <div className="brand left d-flex align-items-center flex-column flex-md-row justify-content-center justify-content-md-start text-center text-md-start">
               <img src="images/logo.png" alt="logo" height={90} width={90} />
-              <h2 style={{ letterSpacing: ".4rem" }} className="ms-3">
+              <h2 style={{ letterSpacing: ".4rem" }} className="ms-md-3 mt-2 mt-md-0">
                 TheHomless.org
               </h2>
             </div>
 
-            <p className="text-end mt-3">© 2025 CoStar Group, Inc.</p>
+            <p className="mt-3">© 2025 CoStar Group, Inc.</p>
 
             {/* Social Media Icons */}
-            <div className="social-icons text-end">
+            <div className="social-icons d-flex justify-content-center justify-content-md-end mt-3 flex-wrap">
               {socialMediaLinks.map((item, index) => (
                 <a
                   key={index}
-                  className="btn text-white bg-dark btn-floating me-1"
+                  className="btn text-white bg-dark btn-floating me-2"
                   href={item.href}
                   role="button"
                 >
@@ -116,7 +116,14 @@ const Footer: React.FC = () => {
 
           {/* Footer Links */}
           {footerData.map((section, index) => (
-            <Col key={index} lg={2} md={4} sm={6} xs={12} className="mb-4 text-center">
+            <Col
+              key={index}
+              lg={2}
+              md={6}
+              sm={6}
+              xs={12}
+              className="mb-4 text-center text-md-start"
+            >
               <h6 className="mb-3">{section.title}</h6>
               <ul className="list-unstyled">
                 {section.links.map((link, idx) => (

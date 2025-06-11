@@ -156,7 +156,7 @@ function RentalsDetails() {
       toast.success('Rental request sent successfully!');
     } catch (err: any) {
       console.error(err);
-      const message = err?.data || err?.error || 'حدث خطأ أثناء الإرسال';
+      const message = err?.data || err?.error || 'Something wrong please try again';
       toast.error(message);
     }
   };
