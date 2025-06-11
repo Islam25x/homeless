@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Container } from "react-bootstrap";
 import { useLoginMutation } from "../../RTK/Auth/AuthApi";
-import { useNavigate , Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 interface FormData {
@@ -87,7 +87,7 @@ const Login = () => {
         localStorage.setItem("userRole", role);
         localStorage.setItem("userId", decoded.sub);
 
-        navigate("/");
+        window.location.href = "/";
       } else {
         setErrors({ backendError: "Token not received from server." });
       }

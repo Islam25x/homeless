@@ -88,8 +88,7 @@ const LoginModal = () => {
         localStorage.setItem("userRole", role);
         localStorage.setItem("userId", decoded.sub);
 
-        navigate("/");
-        window.location.reload()
+        window.location.href = "/";
       } else {
         setErrors({ backendError: "Token not received from server." });
       }

@@ -56,10 +56,10 @@ const RegisterModal = () => {
   };
 
   const navigate = useNavigate()
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const userData = {
       name: formData.username,
       email: formData.email,
@@ -67,21 +67,21 @@ const RegisterModal = () => {
       role: formData.Role,
       isProfessional: formData.isProfessional,
     };
-  
+
     try {
       const response = await register({ userDto: userData, role: formData.Role }).unwrap();
-  
+
       // تحقق مما إذا كانت الاستجابة تحتوي على token (أي Tenant)
       if (response && "token" in response) {
         const token = response.token;
         const refreshToken = response.refreshToken;
-  
+
         const decoded = decodeToken(token);
         const role =
           decoded[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
           ];
-  
+
         localStorage.setItem("token", token);
         if (refreshToken) {
           localStorage.setItem("refreshToken", refreshToken);
@@ -89,20 +89,23 @@ const RegisterModal = () => {
         localStorage.setItem("user", JSON.stringify(decoded));
         localStorage.setItem("userRole", role);
         localStorage.setItem("userId", decoded.sub);
-  
+
         toast.success("Signed up successfully");
-        navigate("/");
-        window.location.reload()
-      } else{
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
+      } else {
         toast.success("Registered successfully. Please wait for approval.");
-        navigate("/");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
       }
     } catch (err) {
       console.error("Signup error:", err);
       toast.error("Registration failed. Please try again.");
     }
   };
-  
+
 
 
   // Safe error casting
@@ -165,8 +168,8 @@ const RegisterModal = () => {
                 onChange={handleChange}
               >
                 <option value="">—Select Role—</option>
-                <option value="Landlord">Landlord</option>
-                <option value="Tenant">Tenant</option>
+                <option value="landlord">Landlord</option>
+                <option value="tenant">Tenant</option>
               </select>
               {fieldErrors.role && <p className="text-danger">{fieldErrors.role}</p>}
             </div>

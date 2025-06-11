@@ -71,7 +71,7 @@ const Register = () => {
       const response = await register({ userDto: userData, role: formData.Role }).unwrap();
 
       // تحقق مما إذا كانت الاستجابة تحتوي على token (أي Tenant)
-      if ("token" in response) {
+      if (response && "token" in response) {
         const token = response.token;
         const refreshToken = response.refreshToken;
 
@@ -90,11 +90,15 @@ const Register = () => {
         localStorage.setItem("userId", decoded.sub);
 
         toast.success("Signed up successfully");
-        navigate("/");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
       } else {
         // الدور ليس Tenant
         toast.success("Registered successfully. Please wait for approval.");
-        navigate("/");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
       }
     } catch (err) {
       console.error("Signup error:", err);
@@ -164,8 +168,8 @@ const Register = () => {
                 onChange={handleChange}
               >
                 <option value="">—Select Role—</option>
-                <option value="Landlord">Landlord</option>
-                <option value="Tenant">Tenant</option>
+                <option value="landlord">Landlord</option>
+                <option value="tenant">Tenant</option>
               </select>
               {fieldErrors.role && <p className="text-danger">{fieldErrors.role}</p>}
             </div>
