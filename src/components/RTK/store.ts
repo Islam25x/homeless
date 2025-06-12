@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { PropertySlice } from './PropertySlice/apiSlice';
+import { PropertySlice } from './PropertyApi/PropertyApi';
 import { authApi } from './Auth/AuthApi';
-import { AdminApi } from './Admin/AdminApi';
-import { SearchApi } from './Search/SearchApi';
-import { SaveApi } from './SaveSlice/SaveApi';
+import { AdminApi } from './AdminApi/AdminApi';
+import { SearchApi } from './SearchApi/SearchApi';
+import { SaveApi } from './SaveApi/SaveApi';
 import { ChatApi } from './ChatApi/ChatApi';
 import { CommentSlice } from './CommentApi/CommentApi';
 import { PropertyRequestApi } from './RentalRequestApi/RentalRequestApi';

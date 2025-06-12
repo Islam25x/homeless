@@ -6,7 +6,7 @@ import {
 } from "../../RTK/RentalRequestApi/RentalRequestApi";
 import { useParams } from "react-router-dom";
 import { Container, Spinner, Alert, Button, Modal } from "react-bootstrap";
-import { TenantRequest } from "../../../types/TenantRequest";
+import { TenantRequest } from "../../../types/TenantRequestType";
 import { getImageSrc } from "../../../utils/imageHelpers";
 
 

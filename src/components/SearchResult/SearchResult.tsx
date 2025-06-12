@@ -1,6 +1,6 @@
 import { Container, Row, Col, Card, } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { useSearchPropertiesQuery } from "../RTK/Search/SearchApi";
+import { useSearchPropertiesQuery } from "../RTK/SearchApi/SearchApi";
 import LogedHeader from "../Headers/LogedHeader/LogedHeader";
 import MainHeader from "../Headers/MainHeader/MainHeader";
 import { Link } from "react-router-dom";

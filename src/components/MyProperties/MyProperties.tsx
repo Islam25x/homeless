@@ -5,7 +5,6 @@ import { Navigation, Pagination } from "swiper/modules";
 import { Link } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { getImageSrc } from "../../utils/imageHelpers"
-import { MyProperty } from "../../types/MyProperty";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -29,7 +28,7 @@ function MyProperties() {
     console.log(myProperty);
 
 
-    const AcceptedProperty = myProperty?.filter((property: MyProperty) => property.rentStatus === "accepted");
+    const AcceptedProperty = myProperty?.filter((property) => property.rentStatus === "accepted");
 
     if (AcceptedProperty.length === 0) {
         return (
@@ -69,7 +68,7 @@ function MyProperties() {
                                 1200: { slidesPerView: 4 },
                             }}
                         >
-                            {AcceptedProperty?.map((property: MyProperty) => (
+                            {AcceptedProperty?.map((property) => (
                                 <SwiperSlide key={property.rentId}>
                                     <Link to={`/RentalsDetails/${property.propertyId}`}>
                                         <div className="post-card">

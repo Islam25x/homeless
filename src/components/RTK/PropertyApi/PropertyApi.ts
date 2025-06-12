@@ -1,13 +1,20 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQueryWithReauth';
-import { RentalDetails } from '../../../types/PropertyDetails';
+import { RentalDetails } from '../../../types/PropertyDetailsType';
+import { Property } from '../../../types/PropertyType';
 
 export const PropertySlice = createApi({
     reducerPath: 'Property',
     baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
-        getProperties: builder.query<any, void>({
+        getProperties: builder.query<Property[], void>({
             query: () => 'RentMate/Property',
+        }),
+        getPropertyPagination: builder.query<Property[], { pageNumber: number }>({
+            query: ({ pageNumber }) => `RentMate/Property/pagination?pageNumber=${pageNumber}`,
+        }),
+        getNumberOfPages: builder.query<number, void>({
+            query: () => 'RentMate/Property/NumberOfPages',
         }),
         getPropertyById: builder.query<RentalDetails, { PropertyId: number; userId: number }>({
             query: ({ PropertyId, userId }) => `RentMate/Property/${PropertyId}?userId=${userId}`,
@@ -48,4 +55,4 @@ export const PropertySlice = createApi({
     }),
 });
 
-export const { useGetPropertiesQuery, useGetPropertyByIdQuery, useAddPropertiesMutation, useUpdatePropertyMutation, useDeletePropertyMutation, useDeletePropertyImageMutation , useAddPropertyAlbumImageMutation } = PropertySlice
+export const { useGetPropertiesQuery, useGetPropertyByIdQuery, useAddPropertiesMutation, useUpdatePropertyMutation, useDeletePropertyMutation, useDeletePropertyImageMutation, useAddPropertyAlbumImageMutation , useGetPropertyPaginationQuery , useGetNumberOfPagesQuery } = PropertySlice

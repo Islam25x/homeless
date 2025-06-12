@@ -1,6 +1,6 @@
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useGetSavedPostsQuery } from "../RTK/SaveSlice/SaveApi";
+import { useGetSavedPostsQuery } from "../RTK/SaveApi/SaveApi";
 import LogedHeader from "../Headers/LogedHeader/LogedHeader";
 import { getImageSrc } from "../../utils/imageHelpers";
 import { useEffect } from "react";

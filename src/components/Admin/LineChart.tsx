@@ -11,7 +11,7 @@ import {
   Legend
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { useGetDashBoardQuery } from '../RTK/Admin/AdminApi';
+import { useGetDashBoardQuery } from '../RTK/AdminApi/AdminApi';
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);

@@ -1,11 +1,11 @@
 import { Container, Alert, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useGetPropertiesQuery } from "../../RTK/PropertySlice/apiSlice";
+import { useGetPropertiesQuery } from "../../RTK/PropertyApi/PropertyApi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import { useEffect, useState } from "react";
 import { getImageSrc } from "../../../utils/imageHelpers";
-import { Property } from "../../../types/Property";
+import { Property } from "../../../types/PropertyType";
 import PostsHistory from "./PostsHistory/PostsHistory";
 
 import "swiper/css";

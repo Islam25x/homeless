@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQueryWithReauth';
-import { TenantRequest } from '../../../types/TenantRequest';
+import { TenantRequest } from '../../../types/TenantRequestType';
+import { MyProperty } from '../../../types/MyPropertyType';
 
 export const PropertyRequestApi = createApi({
     reducerPath: 'PropertyRequestRequest',
@@ -22,7 +23,7 @@ export const PropertyRequestApi = createApi({
         getTenantRequests: builder.query<TenantRequest[], { landlordId: number , propertyId :number }>({
             query: ({ landlordId , propertyId }) => `RentMate/RentalRequest/Requests/${landlordId}/${propertyId}`,
         }),
-        getTenantProperty: builder.query<any, { tenantId: number }>({
+        getTenantProperty: builder.query<MyProperty[], { tenantId: number }>({
             query: ({ tenantId }) => `RentMate/RentalRequest/MyRentRequests/${tenantId}`,
         }),
         AcceptRentRequest: builder.mutation<any, { rentId: number }>({

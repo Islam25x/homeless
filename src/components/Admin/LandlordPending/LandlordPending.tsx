@@ -1,5 +1,5 @@
 import { useGetLandlordPendingQuery } from "../../RTK/Auth/AuthApi";
-import { useAcceptLandlordMutation, useDeleteLandlordMutation } from "../../RTK/Admin/AdminApi";
+import { useAcceptLandlordMutation, useDeleteLandlordMutation } from "../../RTK/AdminApi/AdminApi";
 import { Container, Spinner, Alert, Button } from "react-bootstrap";
 import { useState } from "react";
 import RegistrationsHistory from "./RegistrationsHistory/RegistrationsHistory";

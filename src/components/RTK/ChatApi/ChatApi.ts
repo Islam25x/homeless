@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
-// Define types for the response data
 interface User {
     senderId: number;
     senderName: string;

@@ -5,7 +5,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import { Link } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { getImageSrc } from "../../utils/imageHelpers"
-import { MyProperty } from "../../types/MyProperty";
+import { MyProperty } from "../../types/MyPropertyType";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";

@@ -1,11 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQueryWithReauth';
+import { DashboardStats } from '../../../types/DashboardStatsType';
 
 export const AdminApi = createApi({
     reducerPath: 'Admin',
     baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
-        getDashBoard: builder.query<any, void>({
+        getDashBoard: builder.query<DashboardStats, void>({
             query: () => 'RentMate/Admin/DashBoard',
         }),
         AcceptLandlord: builder.mutation<any, { requestId: number }>({

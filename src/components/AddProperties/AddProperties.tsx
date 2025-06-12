@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import LandlordHeader from '../Headers/LogedHeader/LogedHeader';
 import './AddProperties.css';
-import { useAddPropertiesMutation } from '../RTK/PropertySlice/apiSlice';
+import { useAddPropertiesMutation } from '../RTK/PropertyApi/PropertyApi';
 import { toast } from 'react-toastify';
 
 function AddProperties() {

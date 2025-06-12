@@ -11,7 +11,7 @@ import {
 import { getImageSrc } from '../../utils/imageHelpers';
 import LogedHeader from '../Headers/LogedHeader/LogedHeader';
 import useSignalR from './useSignalR';
-import { ChatMessage } from '../../types/ChatMessage';
+import { ChatMessage } from '../../types/ChatMessageType';
 import './Chat.css';
 
 function Chat() {

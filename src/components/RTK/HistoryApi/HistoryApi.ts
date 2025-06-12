@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQueryWithReauth';
-import { History } from '../../../types/History';
+import { History } from '../../../types/HistoryType';
 
 export const HistoryApi = createApi({
     reducerPath: 'History',

@@ -6,7 +6,7 @@ import {
     faBell,
     faCircle
 } from "@fortawesome/free-solid-svg-icons";
-import { useGetDashBoardQuery } from "../../RTK/Admin/AdminApi";
+import { useGetDashBoardQuery } from "../../RTK/AdminApi/AdminApi";
 import "./DashboardTop.css";
 
 const DashboardTop = () => {
