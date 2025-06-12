@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { useRegisterMutation } from "../../RTK/Auth/AuthApi";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -115,95 +115,104 @@ const Register = () => {
   return (
     <section id="SignUp">
       <Container>
-        <div className="sign-header text-center">
-          <h2>Create an Account</h2>
-        </div>
+        <Row>
+          <Col lg={6} md={8} sm={12}>
+            <div className="form-ctn">
+              <div className="sign-header text-center">
+                <h2>Create an Account</h2>
+              </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-top">
-            <div>
-              <label htmlFor="username">Username</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-              />
-              {fieldErrors.username && <p className="text-danger">{fieldErrors.username}</p>}
+              <form onSubmit={handleSubmit}>
+                <div className="form-top">
+                  <div>
+                    <label htmlFor="username">Username</label>
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
+                    />
+                    {fieldErrors.username && <p className="text-danger">{fieldErrors.username}</p>}
+                  </div>
+
+                  <div className="my-3">
+                    <label htmlFor="email">Email Address</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                    {fieldErrors.email && <p className="text-danger">{fieldErrors.email}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="password">Password</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
+                    {fieldErrors.password && <p className="text-danger">{fieldErrors.password}</p>}
+                  </div>
+
+                  <div className="select">
+                    <label htmlFor="Role" className="d-block mt-2">
+                      Select Role
+                    </label>
+                    <select
+                      id="Role"
+                      name="Role"
+                      value={formData.Role}
+                      onChange={handleChange}
+                    >
+                      <option value="">—Select Role—</option>
+                      <option value="landlord">Landlord</option>
+                      <option value="tenant">Tenant</option>
+                    </select>
+                    {fieldErrors.role && <p className="text-danger">{fieldErrors.role}</p>}
+                  </div>
+                </div>
+
+                <div className="form-bottom">
+                  <p>
+                    Message and data rates may apply. By submitting your phone number,
+                    you consent to being contacted by
+                    <span style={{ color: "#0f8ac0" }}>TheHomeless.org</span>
+                  </p>
+
+                  <div className="d-flex align-items-center mb-4">
+                    <input
+                      type="checkbox"
+                      id="industryProfessional"
+                      name="isProfessional"
+                      checked={formData.isProfessional}
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="industryProfessional" className="mb-0 ms-2">
+                      I am an industry professional
+                    </label>
+                  </div>
+                  <div>
+                    have account?<Link className="ms-2" to='/Login'>Login</Link>
+                  </div>
+                  <button className="mt-3" type="submit" disabled={isLoading}>
+                    {isLoading ? "Signing Up..." : "Sign Up"}
+                  </button>
+
+                  {globalMessage && <p className="text-danger mt-2">{globalMessage}</p>}
+                </div>
+              </form>
             </div>
+          </Col>
+          <Col lg={6} md={4} sm={12}>
 
-            <div className="my-3">
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              {fieldErrors.email && <p className="text-danger">{fieldErrors.email}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {fieldErrors.password && <p className="text-danger">{fieldErrors.password}</p>}
-            </div>
-
-            <div className="select">
-              <label htmlFor="Role" className="d-block mt-2">
-                Select Role
-              </label>
-              <select
-                id="Role"
-                name="Role"
-                value={formData.Role}
-                onChange={handleChange}
-              >
-                <option value="">—Select Role—</option>
-                <option value="landlord">Landlord</option>
-                <option value="tenant">Tenant</option>
-              </select>
-              {fieldErrors.role && <p className="text-danger">{fieldErrors.role}</p>}
-            </div>
-          </div>
-
-          <div className="form-bottom">
-            <p className="text-light">
-              Message and data rates may apply. By submitting your phone number,
-              you consent to being contacted by
-              <span style={{ color: "#0f8ac0" }}>TheHomeless.org</span>
-            </p>
-
-            <div className="d-flex align-items-center mb-4">
-              <input
-                type="checkbox"
-                id="industryProfessional"
-                name="isProfessional"
-                checked={formData.isProfessional}
-                onChange={handleChange}
-              />
-              <label htmlFor="industryProfessional" className="mb-0 ms-2">
-                I am an industry professional
-              </label>
-            </div>
-            <div>
-              have account?<Link className="ms-2" to='/Login'>Login</Link>
-            </div>
-            <button className="mt-2" type="submit" disabled={isLoading}>
-              {isLoading ? "Signing Up..." : "Sign Up"}
-            </button>
-
-            {globalMessage && <p className="text-danger mt-2">{globalMessage}</p>}
-          </div>
-        </form>
+          </Col>
+        </Row>
       </Container>
     </section>
   );

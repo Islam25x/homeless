@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { useLoginMutation } from "../../RTK/Auth/AuthApi";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -102,52 +102,61 @@ const Login = () => {
   return (
     <section id="Login">
       <Container>
-        <div className="sign-header text-center">
-          <h2>Sign into your account</h2>
-        </div>
+        <Row>
+          <Col lg={6} md={7} sm={12}>
+            <div className="form-ctn">
+              <div className="sign-header text-center">
+                <h2>Sign into your account</h2>
+              </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-top">
-            <div>
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
-              {errors.name && <p className="text-danger">{errors.name}</p>}
+              <form onSubmit={handleSubmit}>
+                <div className="form-top">
+                  <div>
+                    <label htmlFor="name">Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
+                    {errors.name && <p className="text-danger">{errors.name}</p>}
+                  </div>
+
+                  <div className="my-3">
+                    <label htmlFor="password">Password</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
+                    {errors.password && <p className="text-danger">{errors.password}</p>}
+                  </div>
+                </div>
+
+                <div className="form-bottom">
+                  <p>
+                    By submitting your info, you agree to our policy at{" "}
+                    <span style={{ color: "#0f8ac0" }}>TheHomeless.org</span>
+                  </p>
+                  don't have account<Link className="ms-2" to='/Register'>Register</Link>
+                  <button className="mt-3" type="submit" disabled={isLoading}>
+                    {isLoading ? "Signing In..." : "Sign In"}
+                  </button>
+
+                  {errors.backendError && (
+                    <p className="text-danger mt-2">{errors.backendError}</p>
+                  )}
+                </div>
+              </form>
             </div>
+          </Col>
+          <Col lg={6} md={5} sm={12}>
 
-            <div className="my-3">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {errors.password && <p className="text-danger">{errors.password}</p>}
-            </div>
-          </div>
-
-          <div className="form-bottom">
-            <p className="text-light">
-              By submitting your info, you agree to our policy at{" "}
-              <span style={{ color: "#0f8ac0" }}>TheHomeless.org</span>
-            </p>
-            don't have account<Link className="ms-2" to='/Register'>Register</Link>
-            <button className="mt-2" type="submit" disabled={isLoading}>
-              {isLoading ? "Signing In..." : "Sign In"}
-            </button>
-
-            {errors.backendError && (
-              <p className="text-danger mt-2">{errors.backendError}</p>
-            )}
-          </div>
-        </form>
+          </Col>
+        </Row>
       </Container>
     </section>
   );
