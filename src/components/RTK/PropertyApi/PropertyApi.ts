@@ -11,7 +11,7 @@ export const PropertySlice = createApi({
             query: () => 'RentMate/Property',
         }),
         getPropertyPagination: builder.query<Property[], { pageNumber: number }>({
-            query: ({ pageNumber }) => `RentMate/Property/pagination?pageNumber=${pageNumber}`,
+            query: ({ pageNumber }) => `RentMate/Property/Page?pageNumber=${pageNumber}`,
         }),
         getNumberOfPages: builder.query<number, void>({
             query: () => 'RentMate/Property/NumberOfPages',
