@@ -11,10 +11,16 @@ export const PropertySlice = createApi({
             query: () => 'RentMate/Property',
         }),
         getPropertyPagination: builder.query<Property[], { pageNumber: number }>({
-            query: ({ pageNumber }) => `RentMate/Property/Page?pageNumber=${pageNumber}`,
+            query: ({ pageNumber }) => `RentMate/Property/Page/${pageNumber}`,
         }),
         getNumberOfPages: builder.query<number, void>({
             query: () => 'RentMate/Property/NumberOfPages',
+        }),
+        getPropertyLandlordPagination: builder.query<Property[], { landlordId :number ,pageNumber: number }>({
+            query: ({ landlordId ,pageNumber }) => `RentMate/Property/${landlordId}/Page/${pageNumber}`,
+        }),
+        getNumberOfLandlordPages: builder.query<number,  {landlordId :number}>({
+            query: ({ landlordId }) => `RentMate/Property/${landlordId}/NumberOfPages`,
         }),
         getPropertyById: builder.query<RentalDetails, { PropertyId: number; userId: number }>({
             query: ({ PropertyId, userId }) => `RentMate/Property/${PropertyId}?userId=${userId}`,
@@ -55,4 +61,4 @@ export const PropertySlice = createApi({
     }),
 });
 
-export const { useGetPropertiesQuery, useGetPropertyByIdQuery, useAddPropertiesMutation, useUpdatePropertyMutation, useDeletePropertyMutation, useDeletePropertyImageMutation, useAddPropertyAlbumImageMutation , useGetPropertyPaginationQuery , useGetNumberOfPagesQuery } = PropertySlice
+export const { useGetPropertiesQuery, useGetPropertyByIdQuery, useAddPropertiesMutation, useUpdatePropertyMutation, useDeletePropertyMutation, useDeletePropertyImageMutation, useAddPropertyAlbumImageMutation , useGetPropertyPaginationQuery , useGetNumberOfPagesQuery , useGetNumberOfLandlordPagesQuery , useGetPropertyLandlordPaginationQuery } = PropertySlice

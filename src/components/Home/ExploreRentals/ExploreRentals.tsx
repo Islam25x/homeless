@@ -2,12 +2,14 @@ import { useState } from "react";
 import {
   useGetPropertyPaginationQuery,
   useGetNumberOfPagesQuery,
+  useGetNumberOfLandlordPagesQuery,
+  useGetPropertyLandlordPaginationQuery,
 } from "../../RTK/PropertyApi/PropertyApi";
 import { Container, Row, Col, Card, Pagination } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getImageSrc } from "../../../utils/imageHelpers";
-import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./ExploreRentals.css";
 
 const ExploreRentals: React.FC = () => {
@@ -16,24 +18,40 @@ const ExploreRentals: React.FC = () => {
   const userRole: string = localStorage.getItem("userRole") || "";
   const userId: string = localStorage.getItem("userId") || "";
 
-  const { data: totalPages } = useGetNumberOfPagesQuery();
+  // Call all hooks unconditionally
+  const {
+    data: totalPagesLandlord,
+  } = useGetNumberOfLandlordPagesQuery({ landlordId: Number(userId) });
+  const { data: totalPagesTenant } = useGetNumberOfPagesQuery();
 
-  const { data: properties = [], isLoading, error } = useGetPropertyPaginationQuery({
-    pageNumber: currentPage
+  const {
+    data: landlordProperties = [],
+    isLoading: isLoadingLandlord,
+    error: errorLandlord,
+  } = useGetPropertyLandlordPaginationQuery({
+    pageNumber: currentPage,
+    landlordId: Number(userId),
   });
 
-  const filteredProperties =
-    userRole === "landlord"
-      ? properties.filter(
-          (p) =>
-            p.landlordId === Number(userId) &&
-            p.propertyApproval === "accepted"
-        )
-      : properties.filter(
-          (p) =>
-            p.propertyApproval === "accepted" &&
-            p.status === "available"
-        );
+  const {
+    data: tenantProperties = [],
+    isLoading: isLoadingTenant,
+    error: errorTenant,
+  } = useGetPropertyPaginationQuery({ pageNumber: currentPage });
+
+  // Choose data based on role
+  const isLandlord = userRole === "landlord";
+
+  const totalPages = isLandlord ? totalPagesLandlord : totalPagesTenant;
+  const properties = isLandlord ? landlordProperties : tenantProperties;
+  const isLoading = isLandlord ? isLoadingLandlord : isLoadingTenant;
+  const error = isLandlord ? errorLandlord : errorTenant;
+
+  const filteredProperties = isLandlord
+    ? properties.filter((p) => p.propertyApproval === "accepted")
+    : properties.filter(
+        (p) => p.propertyApproval === "accepted" && p.status === "available"
+      );
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -64,7 +82,7 @@ const ExploreRentals: React.FC = () => {
           data-aos="fade-right"
         >
           <h2 className="text-center mb-4">
-            {userRole === "landlord" ? "My Properties" : "Explore Rentals"}
+            {isLandlord ? "My Properties" : "Explore Rentals"}
           </h2>
         </div>
 
@@ -96,8 +114,7 @@ const ExploreRentals: React.FC = () => {
                       src={getImageSrc(property.mainImage)}
                       alt={property.title}
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "/default-image.png";
+                        (e.target as HTMLImageElement).src = "/default-image.png";
                       }}
                     />
                     <Card.Body className="align-items-center">
