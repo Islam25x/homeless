@@ -21,7 +21,6 @@ function Notification({ liveNotifications, setLiveNotifications , loadingNotific
         try {
             await notificationMarkAsSeen({ notificationId: id }).unwrap();
 
-            // نحدث الحالة مباشرة
             setLiveNotifications(prev =>
                 prev.map(notif =>
                     notif.id === id ? { ...notif, isSeen: true } : notif
