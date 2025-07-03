@@ -11,7 +11,6 @@ type NotificationProps = {
 };
 
 function Notification({ liveNotifications, setLiveNotifications , loadingNotifications }: NotificationProps) {
-    const userId = localStorage.getItem("userId") || "";
 
 
 
@@ -27,7 +26,7 @@ function Notification({ liveNotifications, setLiveNotifications , loadingNotific
                 )
             );
         } catch {
-            toast.error("❌ فشل تعليم الإشعار كمقروء");
+            
         }
     };
 
